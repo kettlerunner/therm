@@ -1,5 +1,3 @@
-#final version
-
 import time
 import math
 import busio
