@@ -29,6 +29,7 @@ face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
+frame = cv2.imread("static/img/therm_background.png")
 cv2.namedWindow('therm', flags=cv2.WINDOW_GUI_NORMAL + cv2.WINDOW_AUTOSIZE)
 cv2.moveWindow('therm', 220, 30)
 
@@ -66,7 +67,9 @@ while(True):
                     max_temp_f = (9/5)*max_temp + 32
                     label = "Surface temp: {0:.1f} F".format(max_temp_f)
                     draw_label(img, label, (20, 30), (255,255,255))
- 
+    x_offset = 75
+    y_offset = 90
+    frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
     cv2.imshow('therm', img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
