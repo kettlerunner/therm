@@ -30,7 +30,8 @@ eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
 frame = cv2.imread("static/img/therm_background.png")
-cv2.namedWindow('therm', flags=cv2.WINDOW_GUI_NORMAL + cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
+cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 cv2.moveWindow('therm', 220, 30)
 
 while(True):
@@ -70,7 +71,7 @@ while(True):
     x_offset = 75
     y_offset = 90
     frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
-    cv2.imshow('therm', img)
+    cv2.imshow('therm', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
