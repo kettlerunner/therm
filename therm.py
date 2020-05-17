@@ -1,3 +1,5 @@
+#stable version. Just need to add the ambient temp offset and data correlation.
+
 import time
 import math
 import busio
