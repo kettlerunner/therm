@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import time
 import math
 import busio
@@ -24,16 +26,16 @@ def draw_label(img, text, pos, bg_color):
 
 cap = cv2.VideoCapture(0)
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+face_cascade = cv2.CascadeClassifier('/home/pi/therm/haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('/home/pi/therm/haarcascade_eye.xml')
 i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
 ambient_temp = [ 65 ]
 temp_offset = [ 18 ]
 corrected_temp = 98.6
-og_frame = cv2.imread("static/img/therm_background.png")
-stop = cv2.imread("static/img/stop.png")
-go = cv2.imread("static/img/go.png")
+og_frame = cv2.imread("/home/pi/therm/static/img/therm_background.png")
+stop = cv2.imread("/home/pi/therm/static/img/stop.png")
+go = cv2.imread("/home/pi/therm/static/img/go.png")
 
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
@@ -62,7 +64,7 @@ while(True):
             if len(temp_offset) == 100:
                 temp_offset = temp_offset[1:]
             ambient_temp.append( 9/5*np.average(pixels)+32 )
-            temp_offset.append( 18*(65/np.average(ambient_temp)) )
+            temp_offset.append( 18*(67/np.average(ambient_temp)) )
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
 
     for (x, y, w, h) in faces:
