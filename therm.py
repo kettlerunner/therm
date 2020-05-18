@@ -34,6 +34,9 @@ ambient_temp = [ 65 ]
 temp_offset = [ 18 ]
 corrected_temp = 98.6
 og_frame = cv2.imread("static/img/therm_background.png")
+stop = cv2.imread("static/img/stop.png")
+go = cv2.imread("static/img/go.png")
+
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 cv2.moveWindow('therm', 220, 30)
@@ -88,6 +91,10 @@ while(True):
                     draw_label(img, label, (40, 30), (255,255,255))
                     label = "Observed Temp: {0:.1f} F".format(corrected_temp)
                     draw_label(frame, label, (490, 250), (255,255,255))
+                    if corrected_temp >= 101.0:
+                        frame[300:400, 550:650] = stop
+                    else:
+                        frame[300:400, 550:650] = go
     x_offset = 75
     y_offset = 90
     frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
