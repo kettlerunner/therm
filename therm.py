@@ -77,10 +77,10 @@ while(True):
             draw_label(img, label, (20, 30), (255, 255, 255))
         else:
             if eyes.shape[0] >= 2:
-                if h*w < 20000:
+                if h*w < 12000:
                     label = "Please step closer."
                     draw_label(img, label, (20, 30), (255, 255, 255))
-                elif h*w >= 40000:
+                elif h*w >= 35000:
                     label = "Please step back a bit."
                     draw_label(img, label, (20, 30), (255, 255, 255)) 
                 else:
