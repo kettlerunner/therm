@@ -25,11 +25,15 @@ def draw_label(img, text, pos, bg_color):
     cv2.putText(img, text, pos, font_face, scale, color, 1, cv2.LINE_AA)
 
 cap = cv2.VideoCapture(0)
+
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
-frame = cv2.imread("static/img/therm_background.png")
+ambient_temp = [ 65 ]
+temp_offset = [ 18 ]
+corrected_temp = 98.6
+og_frame = cv2.imread("static/img/therm_background.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 cv2.moveWindow('therm', 220, 30)
@@ -37,14 +41,27 @@ cv2.moveWindow('therm', 220, 30)
 while(True):
     ret, img = cap.read()
     img  = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+    frame = og_frame.copy()
     x_offset = 40
-    y_offset = 120
+    y_offset = 180
     crop_width = 300
     crop_height = 300
     img = img[y_offset:y_offset+crop_height, x_offset:x_offset+crop_width]
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    pixels = np.asarray(amg.pixels).flatten()
+    label = "Abmient Temp: {0:.1f} F".format(np.average(ambient_temp))
+    draw_label(frame, label, (490,210), (255,255,255))
+    label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
+    draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
+        if np.std(pixels) < 0.7:
+            if len(ambient_temp) == 100:
+                ambient_temp = ambient_temp[1:]
+            if len(temp_offset) == 100:
+                temp_offset = temp_offset[1:]
+            ambient_temp.append( 9/5*np.average(pixels)+32 )
+            temp_offset.append( 18*(65/np.average(ambient_temp)) )
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
 
     for (x, y, w, h) in faces:
@@ -66,8 +83,11 @@ while(True):
                 else:
                     max_temp = np.amax(amg.pixels)
                     max_temp_f = (9/5)*max_temp + 32
-                    label = "Surface temp: {0:.1f} F".format(max_temp_f)
-                    draw_label(img, label, (20, 30), (255,255,255))
+                    corrected_temp = max_temp_f + np.average(temp_offset)
+                    label = "Temp: {0:.1f} F".format(corrected_temp)
+                    draw_label(img, label, (40, 30), (255,255,255))
+                    label = "Observed Temp: {0:.1f} F".format(corrected_temp)
+                    draw_label(frame, label, (490, 250), (255,255,255))
     x_offset = 75
     y_offset = 90
     frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
