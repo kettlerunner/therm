@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import time
 import math
 import busio
@@ -8,6 +9,7 @@ import adafruit_amg88xx
 import matplotlib
 import numpy as np
 import cv2
+from twilio.rest import Client
 
 def draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
@@ -23,6 +25,11 @@ def draw_label(img, text, pos, bg_color):
     cv2.rectangle(img, (start_x, start_y), (end_x, end_y), bg_color, thickness)
     cv2.putText(img, text, pos, font_face, scale, color, 1, cv2.LINE_AA)
 
+account_sid = os.environ['ACCOUNT_SID']
+auth_token = os.environ['AUTH_TOKEN']
+
+face_in_frame = False
+temp_readings = []
 cap = cv2.VideoCapture(0)
 face_cascade = cv2.CascadeClassifier('/home/pi/Scripts/therm/haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('/home/pi/Scripts/therm/haarcascade_eye.xml')
@@ -74,8 +81,17 @@ while(True):
         if type(eyes) is tuple:
             label = "Please face the cameras."
             draw_label(img, label, (20, 30), (255, 255, 255))
+            if face_in_frame:
+                face_in_frame = False
+                if corrected_temp >= 100:
+                    client = Client(account_sid, auth_token)
+                    client.messages.create(
+                        body="A scan of {0:.1f} F was detected by Thermie.".format(corrected_temp),
+                        from_="+19202602260",
+                        to="+19206295560"
+                    )
         else:
-            if eyes.shape[0] >= 2:
+            if eyes.shape[0] >= 1:
                 if h*w < 12000:
                     label = "Please step closer."
                     draw_label(img, label, (20, 30), (255, 255, 255))
@@ -83,7 +99,12 @@ while(True):
                     label = "Please step back a bit."
                     draw_label(img, label, (20, 30), (255, 255, 255)) 
                 else:
-                    max_temp = np.amax(amg.pixels)
+                    if face_in_frame:
+                        temp_readings.append(np.amax(amg.pixels))
+                    else:
+                        temp_readings = [np.amax(amg.pixels)]
+                        face_in_frame = True
+                    max_temp = np.amax(temp_readings)
                     max_temp_f = (9/5)*max_temp + 32
                     corrected_temp = max_temp_f + np.average(temp_offset)
                     label = "Temp: {0:.1f} F".format(corrected_temp)
