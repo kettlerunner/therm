@@ -52,7 +52,7 @@ while(True):
     img  = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
     img = cv2.flip(img, 1)
     frame = og_frame.copy()
-    x_offset = 0
+    x_offset = 180
     y_offset = 120
     crop_width = 300
     crop_height = 300
