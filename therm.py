@@ -7,7 +7,6 @@ import board
 import adafruit_amg88xx
 import matplotlib
 import numpy as np
-import numpy as np
 import cv2
 
 def draw_label(img, text, pos, bg_color):
