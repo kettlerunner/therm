@@ -24,7 +24,6 @@ def draw_label(img, text, pos, bg_color):
     cv2.putText(img, text, pos, font_face, scale, color, 1, cv2.LINE_AA)
 
 cap = cv2.VideoCapture(0)
-
 face_cascade = cv2.CascadeClassifier('/home/pi/Scripts/therm/haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('/home/pi/Scripts/therm/haarcascade_eye.xml')
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -35,7 +34,6 @@ corrected_temp = 98.6
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
 stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
-
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
