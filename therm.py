@@ -50,6 +50,7 @@ cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 while(True):
     ret, img = cap.read()
     img  = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+    img = cv2.flip(img, 1)
     frame = og_frame.copy()
     x_offset = 0
     y_offset = 120
