@@ -39,7 +39,6 @@ go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-cv2.moveWindow('therm', 220, 30)
 
 #fourcc = cv2.VideoWriter_fourcc(*'XVID')
 #out = cv2.VideoWriter('therm.avi', fourcc, 10.0, (800,480))
