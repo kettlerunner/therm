@@ -109,7 +109,7 @@ while(True):
                     fig.canvas.draw()
                     temp_hist = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
                     temp_hist  = temp_hist.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-                    frame[400:400+temp_hist.shape[0], 350:350+temp_hist.shape[1]] = temp_hist
+                    frame[200:200+temp_hist.shape[0], 350:350+temp_hist.shape[1]] = temp_hist
                     if face_in_frame:
                         temp_readings.append(np.amax(amg.pixels))
                     else:
