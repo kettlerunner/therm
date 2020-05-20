@@ -109,7 +109,7 @@ while(True):
                         temp_readings = [np.average(human_f)]
                         face_in_frame = True                    
                     corrected_temps = temp_readings + temp_offset
-                    if len(corrected_temp) > 10:
+                    if len(corrected_temp) > 10 or np.std(corrected_temp) > 0.10:
                         corrected_temp = corrected_temp[1:]
                     corrected_temp.append(np.average(corrected_temps))
                     display_temp = np.average(corrected_temp)
