@@ -25,7 +25,7 @@ def draw_label(img, text, pos, bg_color):
 account_sid = os.environ['ACCOUNT_SID']
 auth_token = os.environ['AUTH_TOKEN']
 
-out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 20, (800,480))
+out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (800,480))
 
 face_in_frame = False
 temp_readings = []
