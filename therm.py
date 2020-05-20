@@ -33,7 +33,7 @@ eye_cascade = cv2.CascadeClassifier('/home/pi/Scripts/therm/haarcascade_eye.xml'
 i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
 ambient_temp = [ 65 ]
-temp_offset = 20
+temp_offset = 20.0
 corrected_temp = [ 98.6 ]
 display_temp = 98.6
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
@@ -107,11 +107,11 @@ while(True):
                     human_f = temp_scan_f[temp_scan_f > 70.0]
                     human_f = human_f[human_f < 95.0]
                     if face_in_frame:
-                        temp_readings.append(np.average(human_f))
+                        temp_readings.append(np.average(human_f) + temp_offset)
                     else:
-                        temp_readings = [np.average(human_f)]
+                        temp_readings = [np.average(human_f) + temp_offset]
                         face_in_frame = True                    
-                    corrected_temps = temp_readings + temp_offset
+                    corrected_temps = temp_readings
                     if len(corrected_temp) > 10 or np.std(corrected_temp) > 0.10:
                         corrected_temp = corrected_temp[1:]
                     corrected_temp.append(np.average(corrected_temps))
