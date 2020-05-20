@@ -34,10 +34,12 @@ i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
 ambient_temp = [ 65 ]
 temp_offset = 20.0
+alpha = 1
 corrected_temp = [ 98.6 ]
 display_temp = 98.6
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default.png")
+wait_ = cv2.imread("/home/pi/Scripts/therm/static/img/wait.png")
 stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
@@ -113,16 +115,23 @@ while(True):
                         corrected_temp = corrected_temp[1:]
                     corrected_temp.append(np.average(corrected_temps))
                     display_temp = np.average(corrected_temp)
+                    alpha = np.std(corrected_temp)
                     label = "alpha: {0:.4f}".format(np.std(corrected_temp))
                     draw_label(frame, label, (490, 270), (255,255,255))
                     label = "Temp: {0:.1f} F".format(display_temp)
                     draw_label(img, label, (40, 30), (255,255,255))
-                    label = "Observed Temp: {0:.1f} F".format(display_temp)
-                    draw_label(frame, label, (490, 250), (255,255,255))
-                    if display_temp >= 101.0:
-                        frame[300:400, 550:650] = stop
-                    else:
-                        frame[300:400, 550:650] = go
+                    if alpha <= 0.05:
+                        label = "Observed Temp: {0:.1f} F".format(display_temp)
+                        draw_label(frame, label, (490, 250), (255,255,255))
+                        if display_temp >= 101.0:
+                            frame[300:400, 550:650] = stop
+                        else:
+                            frame[300:400, 550:650] = go
+                   else:
+                        label = "Reading Temp. Please Wait."
+                        draw_label(frame, label, (490, 250), (255,255,255))
+                        frame[300:400, 550:650] = wait_
+                        
     x_offset = 75
     y_offset = 90
     if face_in_frame:
