@@ -39,6 +39,7 @@ temp_offset = 24.0
 alpha = 1
 corrected_temp = [ 98.6 ]
 display_temp = 98.6
+room_temp = 65.0
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default.png")
 wait_ = cv2.imread("/home/pi/Scripts/therm/static/img/clock.png")
@@ -72,12 +73,9 @@ while(True):
             if len(ambient_temp) == 100:
                 ambient_temp = ambient_temp[1:]
             ambient_temp.append( 9/5*np.average(pixels)+32 )
+            room_temp = np.average(ambient_temp)
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
-            corrected_temp = [ 98.6 ]
-            display_temp = 98.6
-            temp_readings = []
-            face_in_frame = False
             if display_temp >= 100 and alpha <= 0.05:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
@@ -89,10 +87,14 @@ while(True):
                 message_body = "A scan of {temp:.1f} F was detected by Thermie. \n\nRoom temp: {room_temp:.1} F \nalpha: {alpha:.4}"
                 client = Client(account_sid, auth_token)
                 client.messages.create(
-                    body=message_body.format(temp=display_temp, room_temp = np.average(ambient_temp), alpha=alpha),
+                    body=message_body.format(temp=display_temp, room_temp = room_temp, alpha=alpha),
                     from_="+19202602260",
                     to="+19206295560"
                 )
+            corrected_temp = [ 98.6 ]
+            display_temp = 98.6
+            temp_readings = []
+            face_in_frame = False
             
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y+5), (x+w, y+h), (255, 255, 255), 2)
