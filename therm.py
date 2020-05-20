@@ -113,11 +113,11 @@ while(True):
                         corrected_temp = corrected_temp[1:]
                     corrected_temp.append(np.average(corrected_temps))
                     display_temp = np.average(corrected_temp)
-                    label = "alpha: {0:.4f}".format(np.std(display_temp))
+                    label = "alpha: {0:.4f}".format(np.std(corrected_temp))
                     draw_label(frame, label, (490, 270), (255,255,255))
                     label = "Temp: {0:.1f} F".format(display_temp)
                     draw_label(img, label, (40, 30), (255,255,255))
-                    label = "Observed Temp: {0:.1f} F".format(corrected_temp)
+                    label = "Observed Temp: {0:.1f} F".format(display_temp)
                     draw_label(frame, label, (490, 250), (255,255,255))
                     if corrected_temp >= 101.0:
                         frame[300:400, 550:650] = stop
