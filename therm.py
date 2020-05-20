@@ -76,7 +76,7 @@ while(True):
             display_temp = 98.6
             temp_readings = []
             face_in_frame = False
-            if display_temp >= 100:
+            if display_temp >= 100 and alpha <= 0.05:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(corrected_temp) + "  " + str(len(temp_readings)),
