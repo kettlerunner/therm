@@ -66,7 +66,7 @@ while(True):
     label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
     draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
-        if np.std(pixels) < 0.85:
+        if np.std(pixels) < 1.5:
             if len(ambient_temp) == 100:
                 ambient_temp = ambient_temp[1:]
             if len(temp_offset) == 100:
