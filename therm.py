@@ -103,8 +103,10 @@ while(True):
                 else:
                     temp_scan = np.asarray(amg.pixels).flatten()
                     temp_scan_f = (9/5)*temp_scan + 32
+                    human_f = temp_scan_f[temp_scan_f > 70.0]
+                    human_f = temp_scan_f[temp_scan_f < 110.0]
                     fig = plt.figure(num=None, figsize=(2, 2), dpi=72, facecolor='w', edgecolor='k')
-                    hist = plt.hist(temp_scan_f, color = 'blue', edgecolor = 'black', bins = int(180/5))
+                    hist = plt.hist(human_f, color = 'blue', edgecolor = 'black', bins = int(180/5))
                     plt.tight_layout()
                     fig.canvas.draw()
                     temp_hist = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
