@@ -25,6 +25,8 @@ def draw_label(img, text, pos, bg_color):
 account_sid = os.environ['ACCOUNT_SID']
 auth_token = os.environ['AUTH_TOKEN']
 
+out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 20, (800,480))
+
 face_in_frame = False
 temp_readings = []
 cap = cv2.VideoCapture(0)
@@ -140,9 +142,10 @@ while(True):
         frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
     #out.write(frame)
     cv2.imshow('therm', frame)
+    out.write(frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
-#out.release()
+out.release()
 cv2.destroyAllWindows()
