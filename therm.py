@@ -81,7 +81,15 @@ while(True):
             if display_temp >= 100 and alpha <= 0.05:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
-                    body="A scan of {0:.1f} F was detected by Thermie.".format(corrected_temp) + "  " + str(len(temp_readings)),
+                    body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
+                    from_="+19202602260",
+                    to="+19206295560"
+                )
+            if display_temp < 100 and alpha <= 0.05:
+                message_body = "A scan of {temp:.1f} F was detected by Thermie. \n\nRoom temp: {room_temp:.1} F \nalpha: {alpha:.4}"
+                client = Client(account_sid, auth_token)
+                client.messages.create(
+                    body=message_body.format(temp=display_temp, room_temp = np.average(ambient_temp), alpha),
                     from_="+19202602260",
                     to="+19206295560"
                 )
