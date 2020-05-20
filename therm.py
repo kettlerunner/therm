@@ -72,7 +72,12 @@ while(True):
         if np.std(pixels) < 1.5:
             if len(ambient_temp) == 100:
                 ambient_temp = ambient_temp[1:]
-            ambient_temp.append( 9/5*np.average(pixels)+32 )
+            temp_scan = np.asarray(amg.pixels).flatten()
+            temp_scan_f = (9/5)*temp_scan + 32
+            room_f = temp_scan_f[temp_scan_f > 50.0]
+            room_f = room_f[room_f < 75.0]
+            if len(room_f) >= 1:
+                ambient_temp.append( 9/5*np.average(pixels)+32 )
             room_temp = np.average(ambient_temp)
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
