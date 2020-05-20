@@ -58,7 +58,7 @@ while(True):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     pixels = np.asarray(amg.pixels).flatten()
-    label = "Abmient Temp: {0:.1f} F".format(np.average(ambient_temp))
+    label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
     draw_label(frame, label, (490,210), (255,255,255))
     label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
     draw_label(frame, label, (490, 230), (255,255,255))
@@ -109,6 +109,8 @@ while(True):
                         face_in_frame = True                    
                     corrected_temps = temp_readings + temp_offset
                     corrected_temp = np.average(corrected_temps)
+                    label = "alpha: {0:.4f}".format(np.std(corrected_temps))
+                    draw_label(frame, label, (490, 250), (255,255,255))
                     label = "Temp: {0:.1f} F".format(corrected_temp)
                     draw_label(img, label, (40, 30), (255,255,255))
                     label = "Observed Temp: {0:.1f} F".format(corrected_temp)
