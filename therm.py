@@ -115,7 +115,7 @@ while(True):
                     display_temp = np.average(corrected_temp)
                     label = "alpha: {0:.4f}".format(np.std(display_temp))
                     draw_label(frame, label, (490, 270), (255,255,255))
-                    label = "Temp: {0:.1f} F".format(corrected_temp)
+                    label = "Temp: {0:.1f} F".format(display_temp)
                     draw_label(img, label, (40, 30), (255,255,255))
                     label = "Observed Temp: {0:.1f} F".format(corrected_temp)
                     draw_label(frame, label, (490, 250), (255,255,255))
