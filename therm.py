@@ -74,7 +74,16 @@ while(True):
             ambient_temp.append( 9/5*np.average(pixels)+32 )
             temp_offset.append( 18*(67/np.average(ambient_temp)) )
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
-
+        if face_in_frame:
+            face_in_frame = False
+            if corrected_temp >= 100:
+                client = Client(account_sid, auth_token)
+                client.messages.create(
+                    body="A scan of {0:.1f} F was detected by Thermie.".format(corrected_temp),
+                    from_="+19202602260",
+                    to="+19206295560"
+                )
+            
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y+5), (x+w, y+h), (255, 255, 255), 2)
         roi_gray = gray[y:y+h, x:x+w]
@@ -83,15 +92,6 @@ while(True):
         if type(eyes) is tuple:
             label = "Please face the cameras."
             draw_label(img, label, (20, 30), (255, 255, 255))
-            if face_in_frame:
-                face_in_frame = False
-                if corrected_temp >= 100:
-                    client = Client(account_sid, auth_token)
-                    client.messages.create(
-                        body="A scan of {0:.1f} F was detected by Thermie.".format(corrected_temp),
-                        from_="+19202602260",
-                        to="+19206295560"
-                    )
         else:
             if eyes.shape[0] >= 1:
                 if h*w < 12000:
