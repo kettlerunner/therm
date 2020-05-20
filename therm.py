@@ -6,7 +6,7 @@ import math
 import busio
 import board
 import adafruit_amg88xx
-import matplotlib
+import matplotlib as plt
 import numpy as np
 import cv2
 from twilio.rest import Client
@@ -101,6 +101,9 @@ while(True):
                     label = "Please step back a bit."
                     draw_label(img, label, (20, 30), (255, 255, 255)) 
                 else:
+                    plt.hist(amg.pixels, color = 'blue', edgecolor = 'black', bins = int(180/5))
+                    plt.tight_layout()
+                    plt.show()
                     if face_in_frame:
                         temp_readings.append(np.amax(amg.pixels))
                     else:
