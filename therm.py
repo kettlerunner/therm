@@ -127,7 +127,7 @@ while(True):
                             frame[300:400, 550:650] = stop
                         else:
                             frame[300:400, 550:650] = go
-                   else:
+                    else:
                         label = "Reading Temp. Please Wait."
                         draw_label(frame, label, (490, 250), (255,255,255))
                         frame[300:400, 550:650] = wait_
