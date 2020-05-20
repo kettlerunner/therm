@@ -119,7 +119,7 @@ while(True):
                     draw_label(img, label, (40, 30), (255,255,255))
                     label = "Observed Temp: {0:.1f} F".format(display_temp)
                     draw_label(frame, label, (490, 250), (255,255,255))
-                    if corrected_temp >= 101.0:
+                    if display_temp >= 101.0:
                         frame[300:400, 550:650] = stop
                     else:
                         frame[300:400, 550:650] = go
