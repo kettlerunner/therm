@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
 import os
-import time
-import math
 import busio
 import board
 import adafruit_amg88xx
-import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 from twilio.rest import Client
@@ -105,22 +102,12 @@ while(True):
                     temp_scan_f = (9/5)*temp_scan + 32
                     human_f = temp_scan_f[temp_scan_f > 70.0]
                     human_f = temp_scan_f[temp_scan_f < 95.0]
-                    print("avg:", np.average(human_f))
-                    fig = plt.figure(num=None, figsize=(2, 2), dpi=72, facecolor='w', edgecolor='k')
-                    hist = plt.hist(human_f, color = 'blue', edgecolor = 'black', bins = int(180/5))
-                    plt.tight_layout()
-                    fig.canvas.draw()
-                    temp_hist = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
-                    temp_hist  = temp_hist.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-                    frame[200:200+temp_hist.shape[0], 350:350+temp_hist.shape[1]] = temp_hist
                     if face_in_frame:
-                        temp_readings.append(np.amax(amg.pixels))
+                        temp_readings.append(np.average(human_f))
                     else:
-                        temp_readings = [np.amax(amg.pixels)]
-                        face_in_frame = True
-                    max_temp = np.amax(temp_readings)
-                    max_temp_f = (9/5)*max_temp + 32
-                    corrected_temp = max_temp_f + np.average(temp_offset)
+                        temp_readings = [np.average(human_f)]
+                        face_in_frame = True                    
+                    corrected_temp = np.average(temp_readings) + temp_offset
                     label = "Temp: {0:.1f} F".format(corrected_temp)
                     draw_label(img, label, (40, 30), (255,255,255))
                     label = "Observed Temp: {0:.1f} F".format(corrected_temp)
