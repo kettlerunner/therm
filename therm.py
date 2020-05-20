@@ -111,7 +111,7 @@ while(True):
                     bin_arange = np.arange(min_temp, max_temp+1, bin_size)
                     counts, edges = np.histogram(human_f, bins=binarange)
                     bin_middles = (edges[:-1] + edges[1:]) / 2
-                    weights = np.array(range(len(counts))/sum(range(len(counts)))
+                    weights = np.array(range(len(counts))/sum(range(len(counts))))
                     average = np.sum(bin_middles*counts*1)/sum(counts)
                     weighted_average = np.sum(bin_middles*counts*weights)/sum(counts)
                     print("avg:", average, "w_avg: ", weighted_average)
