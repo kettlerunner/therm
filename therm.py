@@ -101,7 +101,7 @@ while(True):
                     temp_scan = np.asarray(amg.pixels).flatten()
                     temp_scan_f = (9/5)*temp_scan + 32
                     human_f = temp_scan_f[temp_scan_f > 70.0]
-                    human_f = temp_scan_f[temp_scan_f < 95.0]
+                    human_f = temp_scan_f[human_f < 95.0]
                     if face_in_frame:
                         temp_readings.append(np.average(human_f))
                     else:
