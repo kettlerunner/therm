@@ -34,7 +34,8 @@ i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
 ambient_temp = [ 65 ]
 temp_offset = [ 18 ]
-corrected_temp = 98.6
+corrected_temp = [ 98.6 ]
+display_temp = 98.6
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default.png")
 stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
@@ -73,7 +74,7 @@ while(True):
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
             face_in_frame = False
-            if corrected_temp >= 100:
+            if display_temp >= 100:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(corrected_temp) + "  " + str(len(temp_readings)),
@@ -108,9 +109,12 @@ while(True):
                         temp_readings = [np.average(human_f)]
                         face_in_frame = True                    
                     corrected_temps = temp_readings + temp_offset
-                    corrected_temp = np.average(corrected_temps)
-                    label = "alpha: {0:.4f}".format(np.std(corrected_temps))
-                    draw_label(frame, label, (490, 280), (255,255,255))
+                    if len(corrected_temp) > 10:
+                        corrected_temp = corrected_temp[1:]
+                    corrected_temp.append(np.average(corrected_temps))
+                    display_temp = np.average(corrected_temp)
+                    label = "alpha: {0:.4f}".format(np.std(display_temp))
+                    draw_label(frame, label, (490, 270), (255,255,255))
                     label = "Temp: {0:.1f} F".format(corrected_temp)
                     draw_label(img, label, (40, 30), (255,255,255))
                     label = "Observed Temp: {0:.1f} F".format(corrected_temp)
