@@ -67,10 +67,7 @@ while(True):
         if np.std(pixels) < 1.5:
             if len(ambient_temp) == 100:
                 ambient_temp = ambient_temp[1:]
-            if len(temp_offset) == 100:
-                temp_offset = temp_offset[1:]
             ambient_temp.append( 9/5*np.average(pixels)+32 )
-            #temp_offset.append( 18*(67/np.average(ambient_temp)) )
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
             corrected_temp = [ 98.6 ]
