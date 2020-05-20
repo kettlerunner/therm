@@ -73,6 +73,9 @@ while(True):
             temp_offset.append( 18*(67/np.average(ambient_temp)) )
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
+            corrected_temp = [ 98.6 ]
+            display_temp = 98.6
+            temp_readings = []
             face_in_frame = False
             if display_temp >= 100:
                 client = Client(account_sid, auth_token)
