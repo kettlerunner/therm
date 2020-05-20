@@ -79,7 +79,7 @@ while(True):
             if corrected_temp >= 100:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
-                    body="A scan of {0:.1f} F was detected by Thermie.".format(corrected_temp),
+                    body="A scan of {0:.1f} F was detected by Thermie.".format(corrected_temp) + "  " + str(len(temp_readings)),
                     from_="+19202602260",
                     to="+19206295560"
                 )
