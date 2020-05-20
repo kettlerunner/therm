@@ -104,7 +104,17 @@ while(True):
                     temp_scan = np.asarray(amg.pixels).flatten()
                     temp_scan_f = (9/5)*temp_scan + 32
                     human_f = temp_scan_f[temp_scan_f > 70.0]
-                    human_f = temp_scan_f[temp_scan_f < 110.0]
+                    human_f = temp_scan_f[temp_scan_f < 95.0]
+                    max_temp = 95
+                    min_temp = 70
+                    bin_size = 20
+                    bin_arange = np.arange(min_temp, max_temp+1, bin_size)
+                    counts, edges = np.histogram(human_f, bins=binarange)
+                    bin_middles = (edges[:-1] + edges[1:]) / 2
+                    weights = np.array(range(len(counts))/sum(range(len(counts)))
+                    average = np.sum(bin_middles*counts*1)/sum(counts)
+                    weighted_average = np.sum(bin_middles*counts*weights)/sum(counts)
+                    print("avg:", average, "w_avg: ", weighted_average)
                     fig = plt.figure(num=None, figsize=(2, 2), dpi=72, facecolor='w', edgecolor='k')
                     hist = plt.hist(human_f, color = 'blue', edgecolor = 'black', bins = int(180/5))
                     plt.tight_layout()
