@@ -107,7 +107,8 @@ while(True):
                     else:
                         temp_readings = [np.average(human_f)]
                         face_in_frame = True                    
-                    corrected_temp = np.average(temp_readings) + temp_offset
+                    corrected_temps = temp_readings + temp_offset
+                    corrected_temp = np.average(corrected_temps)
                     label = "Temp: {0:.1f} F".format(corrected_temp)
                     draw_label(img, label, (40, 30), (255,255,255))
                     label = "Observed Temp: {0:.1f} F".format(corrected_temp)
