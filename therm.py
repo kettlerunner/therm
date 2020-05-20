@@ -39,7 +39,7 @@ corrected_temp = [ 98.6 ]
 display_temp = 98.6
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default.png")
-wait_ = cv2.imread("/home/pi/Scripts/therm/static/img/wait.png")
+wait_ = cv2.imread("/home/pi/Scripts/therm/static/img/clock.png")
 stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
