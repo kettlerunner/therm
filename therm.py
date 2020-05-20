@@ -28,6 +28,7 @@ def draw_label(img, text, pos, bg_color):
 account_sid = os.environ['ACCOUNT_SID']
 auth_token = os.environ['AUTH_TOKEN']
 
+fig = plt.figure(num=None, figsize=(2, 2), dpi=72, facecolor='w', edgecolor='k')
 face_in_frame = False
 temp_readings = []
 cap = cv2.VideoCapture(0)
@@ -103,10 +104,12 @@ while(True):
                 else:
                     temp_scan = np.asarray(amg.pixels).flatten()
                     temp_scan_f = (9/5)*temp_scan + 32
-                    plt.figure(num=None, figsize=(1, 1), dpi=72, facecolor='w', edgecolor='k')
-                    plt.hist(np.asarray(amg.pixels).flatten(), color = 'blue', edgecolor = 'black', bins = int(180/5))
+                    hist = plt.hist(np.asarray(amg.pixels).flatten(), color = 'blue', edgecolor = 'black', bins = int(180/5))
                     plt.tight_layout()
-                    plt.show()
+                    fig.canvas.draw()
+                    temp_hist = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+                    temp_hist  = temp_hist.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+                    frame[200200+temp_hist.shape[0], 350:350+temp_hist.shape[1]] = temp_hist
                     if face_in_frame:
                         temp_readings.append(np.amax(amg.pixels))
                     else:
