@@ -101,7 +101,7 @@ while(True):
                     label = "Please step back a bit."
                     draw_label(img, label, (20, 30), (255, 255, 255)) 
                 else:
-                    plt.hist(amg.pixels, color = 'blue', edgecolor = 'black', bins = int(180/5))
+                    plt.hist(np.asarray(amg.pixels).flatten(), color = 'blue', edgecolor = 'black', bins = int(180/5))
                     plt.tight_layout()
                     plt.show()
                     if face_in_frame:
