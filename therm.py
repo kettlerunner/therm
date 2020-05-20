@@ -39,6 +39,7 @@ ambient_temp = [ 65 ]
 temp_offset = [ 18 ]
 corrected_temp = 98.6
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
+blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default.png")
 stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
@@ -118,7 +119,10 @@ while(True):
                         frame[300:400, 550:650] = go
     x_offset = 75
     y_offset = 90
-    frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
+    if face_in_frame:
+        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
+    else:
+        frame[y_offset:y_offset+img.300, x_offset:x_offset+img.300] = blank_screen
     #out.write(frame)
     cv2.imshow('therm', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
