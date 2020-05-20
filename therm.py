@@ -89,7 +89,7 @@ while(True):
                 message_body = "A scan of {temp:.1f} F was detected by Thermie. \n\nRoom temp: {room_temp:.1} F \nalpha: {alpha:.4}"
                 client = Client(account_sid, auth_token)
                 client.messages.create(
-                    body=message_body.format(temp=display_temp, room_temp = np.average(ambient_temp), alpha),
+                    body=message_body.format(temp=display_temp, room_temp = np.average(ambient_temp), alpha=alpha),
                     from_="+19202602260",
                     to="+19206295560"
                 )
