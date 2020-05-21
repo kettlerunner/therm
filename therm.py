@@ -74,11 +74,12 @@ while(True):
             tx = tx - (bx-480)
             bx = tx + 300 
         img = img[ty:ty+300, tx:bx]
+        faces = faces[np.argmax(face_sizes)]
     else:
         tx = int(img.shape[1]/2 - 150)
         ty = int(img.shape[0]/2 - 150)
         img = img[ty:ty+300, tx:tx+300]
-    faces = faces[np.argmax(face_sizes)]        
+            
     pixels = np.asarray(amg.pixels).flatten()
     label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
     draw_label(frame, label, (490,210), (255,255,255))
