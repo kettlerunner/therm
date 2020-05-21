@@ -78,7 +78,7 @@ while(True):
         tx = int(img.shape[1]/2 - 150)
         ty = int(img.shape[0]/2 - 150)
         img = img[ty:ty+300, tx:tx+300]
-        
+    faces = faces[np.argmax(face_sizes)]        
     pixels = np.asarray(amg.pixels).flatten()
     label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
     draw_label(frame, label, (490,210), (255,255,255))
@@ -117,7 +117,7 @@ while(True):
             temp_readings = []
             face_in_frame = False
             
-    for (x, y, w, h) in faces[np.argmax(face_sizes)]:
+    for (x, y, w, h) in faces:
         if face_in_frame == False:
             temp_readings = []
         face_in_frame = True
