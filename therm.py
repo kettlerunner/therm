@@ -117,7 +117,7 @@ while(True):
             temp_readings = []
             face_in_frame = False
             
-    for (x, y, w, h) in faces:
+    for (x, y, w, h) in faces[np.argmax(face_sizes)]:
         if face_in_frame == False:
             temp_readings = []
         face_in_frame = True
