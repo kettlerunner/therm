@@ -122,7 +122,6 @@ while(True):
         if face_in_frame == False:
             temp_readings = []
         face_in_frame = True
-        cv2.rectangle(img, (x, y+5), (x+w, y+h), (255, 255, 255), 2)
         if h*w < 8000:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
