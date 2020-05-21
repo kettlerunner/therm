@@ -55,13 +55,28 @@ while(True):
     img  = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
     img = cv2.flip(img, 1)
     frame = og_frame.copy()
-    x_offset = 180
-    y_offset = 120
-    crop_width = 300
-    crop_height = 300
-    img = img[y_offset:y_offset+crop_height, x_offset:x_offset+crop_width]
+    x_offset = 40
+    crop_width = 400 #crop off 40 px on each side
+    img = img[:, x_offset:x_offset+crop_width]
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    face_sizes = []
+    for (x, y, w, h) in faces:
+        face_sizes.append(w*h)
+        cv2.rectangle(img, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
+    
+    if len(face_sizes) > 0:
+        (x, y, w, h) = faces[np.argmax(face_sizes)]
+        tx = int(x+w/2-150)
+        ty = int(y+h/2-150)
+        if tx < 0: tx = 0
+        if ty < 0: ty = 0
+        img = img[ty:ty+300, tx:tx+300]
+    else:
+        tx = int(img.shape[1]/2 - 150)
+        ty = int(img.shape[0]/2 - 150)
+        img = img[ty:ty+300, tx:tx+300]
+        
     pixels = np.asarray(amg.pixels).flatten()
     label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
     draw_label(frame, label, (490,210), (255,255,255))
