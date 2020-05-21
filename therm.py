@@ -74,7 +74,7 @@ while(True):
             tx = tx - (bx-480)
             bx = tx + 300 
         img = img[ty:ty+300, tx:bx]
-        faces = faces[np.argmax(face_sizes):faces = faces[np.argmax(face_sizes)]+1]
+        faces = faces[np.argmax(face_sizes):np.argmax(face_sizes)+1]
     else:
         tx = int(img.shape[1]/2 - 150)
         ty = int(img.shape[0]/2 - 150)
