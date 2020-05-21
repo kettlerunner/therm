@@ -55,11 +55,8 @@ while(True):
     img  = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
     img = cv2.flip(img, 1)
     frame = og_frame.copy()
-    x_offset = 40
-    crop_width = 400 #crop off 40 px on each side
-    img = img[:, x_offset:x_offset+crop_width]
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    faces = face_cascade.detectMultiScale(gray, 1.5, 5)
     face_sizes = []
     for (x, y, w, h) in faces:
         face_sizes.append(w*h)
