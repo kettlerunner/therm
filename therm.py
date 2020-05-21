@@ -68,7 +68,12 @@ while(True):
         ty = int(y+h/2-150)
         if tx < 0: tx = 0
         if ty < 0: ty = 0
-        img = img[ty:ty+300, tx:tx+300]
+        bx = tx + 300
+        by = ty + 300
+        if bx > 480:
+            tx = tx - (bx-480)
+            bx = tx + 300 
+        img = img[ty:ty+300, tx:bx]
     else:
         tx = int(img.shape[1]/2 - 150)
         ty = int(img.shape[0]/2 - 150)
