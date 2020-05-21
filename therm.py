@@ -96,6 +96,14 @@ while(True):
             if len(room_f) >= 1:
                 ambient_temp.append( 9/5*np.average(pixels)+32 )
             room_temp = np.average(ambient_temp)
+            if room_temp < 70:
+                client = Client(account_sid, auth_token)
+                client.messages.create(
+                    body="Um, it's getting a bit cold in here. \n\nTemp: {0:.1f} F".format(display_temp),
+                    media_url=['https://precisionathleticswi.com/images/jack_on_ice.jpg'],
+                    from_="+19202602260",
+                    to="+19206295560"
+                )
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
             if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) > 1:
