@@ -56,7 +56,7 @@ while(True):
     img = cv2.flip(img, 1)
     frame = og_frame.copy()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.1, 5)
+    faces = face_cascade.detectMultiScale(gray, 1.15, 3)
     face_sizes = []
     for (x, y, w, h) in faces:
         face_sizes.append(w*h)
