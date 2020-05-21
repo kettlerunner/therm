@@ -80,14 +80,14 @@ while(True):
             room_temp = np.average(ambient_temp)
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
-            if display_temp >= 100 and alpha <= 0.05:
+            if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) > 1:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
                     from_="+19202602260",
                     to="+19206295560"
                 )
-            if display_temp < 100 and alpha <= 0.05:
+            if display_temp < 100 and alpha <= 0.05 and len(corrected_temp) > 1:
                 message_body = "A scan of {temp:.1f} F was detected by Thermie. \n\nRoom temp: {room_temp:.1} F \nalpha: {alpha:.4}"
                 client = Client(account_sid, auth_token)
                 client.messages.create(
@@ -101,8 +101,11 @@ while(True):
             face_in_frame = False
             
     for (x, y, w, h) in faces:
+        if face_in_frame == False:
+            temp_readings = []
+        face_in_frame = True
         cv2.rectangle(img, (x, y+5), (x+w, y+h), (255, 255, 255), 2)
-        if h*w < 12000:
+        if h*w < 8000:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
         elif h*w >= 35000:
@@ -113,11 +116,7 @@ while(True):
             temp_scan_f = (9/5)*temp_scan + 32
             human_f = temp_scan_f[temp_scan_f > 70.0]
             human_f = human_f[human_f < 95.0]
-            if face_in_frame:
-                temp_readings.append(np.average(human_f) + temp_offset)
-            else:
-                temp_readings = [np.average(human_f) + temp_offset]
-                face_in_frame = True                    
+            temp_readings.append(np.average(human_f) + temp_offset)                    
             corrected_temps = temp_readings
             if len(corrected_temp) > 10 or np.std(corrected_temp) > 0.10:
                 corrected_temp = corrected_temp[1:]
