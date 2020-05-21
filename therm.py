@@ -56,7 +56,7 @@ while(True):
     img = cv2.flip(img, 1)
     frame = og_frame.copy()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.2, 5)
+    faces = face_cascade.detectMultiScale(gray, 1.03, 5)
     face_sizes = []
     for (x, y, w, h) in faces:
         face_sizes.append(w*h)
@@ -130,7 +130,7 @@ while(True):
         if face_in_frame == False:
             temp_readings = []
         face_in_frame = True
-        if h*w < 8000:
+        if h*w < 6000:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
         elif h*w >= 35000:
