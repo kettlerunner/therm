@@ -94,7 +94,7 @@ while(True):
             room_f = temp_scan_f[temp_scan_f > 50.0]
             room_f = room_f[room_f < 75.0]
             if len(room_f) >= 1:
-                ambient_temp.append( 9/5*np.average(pixels)+32 )
+                ambient_temp.append( np.average(room_f))
             room_temp = np.average(ambient_temp)
             #if room_temp < 70:
             #    client = Client(account_sid, auth_token)
