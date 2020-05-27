@@ -108,16 +108,19 @@ while(True):
         if face_in_frame:
             if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) > 1:
                 client = Client(account_sid, auth_token)
-                client.messages.create(
-                    body="A message from Thermy: \n\nA scan of {0:.1f} F was detected by Thermie.".format(display_temp),
-                    from_="+19202602260",
-                    to="+14147457204"
-                )
-                client.messages.create(
-                    body="A message from Thermy: \n\nA scan of {0:.1f} F was detected by Thermie.".format(display_temp),
-                    from_="+19202602260",
-                    to="+14142369050"
-                )
+                try:
+                    client.messages.create(
+                        body="A message from Thermy: \n\nA scan of {0:.1f} F was detected by Thermie.".format(display_temp),
+                        from_="+19202602260",
+                        to="+14147457204"
+                    )
+                    client.messages.create(
+                        body="A message from Thermy: \n\nA scan of {0:.1f} F was detected by Thermie.".format(display_temp),
+                        from_="+19202602260",
+                        to="+14142369050"
+                    )
+                except:
+                     print("Error sending messages. No network connection.")
             corrected_temp = [ 98.6 ]
             display_temp = 98.6
             temp_readings = []
