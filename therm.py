@@ -109,17 +109,14 @@ while(True):
             if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) > 1:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
-                    body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
+                    body="A message from Thermy: \n\nA scan of {0:.1f} F was detected by Thermie.".format(display_temp),
                     from_="+19202602260",
-                    to="+19206295560"
+                    to="+14147457204"
                 )
-            if display_temp < 100 and alpha <= 0.05 and len(corrected_temp) > 1:
-                message_body = "A scan of {temp:.1f} F was detected by Thermie. \n\nRoom temp: {room_temp:.1f} F \nalpha: {alpha:.4}"
-                client = Client(account_sid, auth_token)
                 client.messages.create(
-                    body=message_body.format(temp=display_temp, room_temp = room_temp, alpha=alpha),
+                    body="A message from Thermy: \n\nA scan of {0:.1f} F was detected by Thermie.".format(display_temp),
                     from_="+19202602260",
-                    to="+19206295560"
+                    to="+14142369050"
                 )
             corrected_temp = [ 98.6 ]
             display_temp = 98.6
@@ -140,7 +137,7 @@ while(True):
             temp_scan = np.asarray(amg.pixels).flatten()
             temp_scan_f = (9/5)*temp_scan + 32
             human_f = temp_scan_f[temp_scan_f > 70.0]
-            human_f = human_f[human_f < 95.0]
+            human_f = human_f[human_f < 80.0]
             temp_readings.append(np.average(human_f) + temp_offset)                    
             corrected_temps = temp_readings
             if len(corrected_temp) > 10 or np.std(corrected_temp) > 0.10:
@@ -155,7 +152,7 @@ while(True):
             if alpha <= 0.05:
                 label = "Observed Temp: {0:.1f} F".format(display_temp)
                 draw_label(frame, label, (490, 250), (255,255,255))
-                if display_temp >= 101.0:
+                if display_temp >= 100.0:
                     frame[300:400, 550:650] = stop
                 else:
                     frame[300:400, 550:650] = go
