@@ -110,12 +110,12 @@ while(True):
                 client = Client(account_sid, auth_token)
                 try:
                     client.messages.create(
-                        body="A message from Thermy: \n\nA scan of {0:.1f} F was detected by Thermie.".format(display_temp),
+                        body="A message from Thermy: \n\nA scan of {0:.1f} F was detected.".format(display_temp),
                         from_="+19202602260",
                         to="+14147457204"
                     )
                     client.messages.create(
-                        body="A message from Thermy: \n\nA scan of {0:.1f} F was detected by Thermie.".format(display_temp),
+                        body="A message from Thermy: \n\nA scan of {0:.1f} F was detected.".format(display_temp),
                         from_="+19202602260",
                         to="+14142369050"
                     )
