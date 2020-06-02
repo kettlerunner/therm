@@ -6,6 +6,7 @@ import board
 import adafruit_amg88xx
 import numpy as np
 import cv2
+import cv2.cv as cv
 from twilio.rest import Client
 
 def draw_label(img, text, pos, bg_color):
@@ -30,8 +31,8 @@ auth_token = os.environ['AUTH_TOKEN']
 face_in_frame = False
 temp_readings = []
 cap = cv2.VideoCapture(0)
-cap.set(cv2.CV_CAP_PROP_FRAME_WIDTH, 320)
-cap.set(cv2.CV_CAP_PROP_FRAME_HEIGHT, 240)
+cap.set(cv.CV_CAP_PROP_FRAME_WIDTH, 320)
+cap.set(cv.CV_CAP_PROP_FRAME_HEIGHT, 240)
 
 face_cascade = cv2.CascadeClassifier('/home/pi/Scripts/therm/haarcascade_frontalface_default.xml')
 i2c = busio.I2C(board.SCL, board.SDA)
