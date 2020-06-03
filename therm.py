@@ -220,12 +220,12 @@ while(True):
             group_w = 0
             group_y = 0
             group_h = 0
-            zone_x = -1
-            zone_w = 0
-            zone_y = 0
-            zone_h = 0
             temp_reading = 0
             while i < group_count:
+                zone_x = -1
+                zone_w = 0
+                zone_y = 0
+                zone_h = 0
                 series = data_grid[pred_y == i]
                 total = 0
                 data_buffer = []
