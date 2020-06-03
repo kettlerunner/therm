@@ -217,7 +217,7 @@ while(True):
                     display_temp = temp_reading + 17
                 else:
                     display_temp = temp_reading + 18
-                label = "Observed Temp: {0:.12f} F".format(display_temp)
+                label = "Observed Temp: {0:.2f} F".format(display_temp)
                 draw_label(frame, label, (490, 250), (255,255,255))
                 if display_temp >= 100.0:
                     frame[300:400, 550:650] = stop
