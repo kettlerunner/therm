@@ -182,8 +182,11 @@ while(True):
             max_size = 0
             group_index = 0
             temp_reading = 0
+            group_size = []
+            group_dims = []
             while i < group_count:
                 series = data_grid[pred_y == i]
+                print(series)
                 total = 0
                 data_buffer = []
                 for cell in series:
