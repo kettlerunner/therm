@@ -57,7 +57,7 @@ stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-fig = plt.figure(num='AMG8833 Thermal Scanner', figsize=(18.0, 9.0));
+fig = plt.figure(num='AMG8833 Thermal Scanner', figsize=(2.0, 2.0));
 points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0,64)]
 grid_x, grid_y = np.mgrid[0:7:64j, 0:7:64j]
 ax = fig.add_subplot(111)
@@ -189,12 +189,12 @@ while(True):
             filtered_flat_grid = flat_grid[flat_grid >=70]
             flat_grid = filtered_flat_grid[filtered_flat_grid <=95]
             hist, bin_edges = np.histogram(flat_grid, bins=16)
-            grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 70
+            grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 0
             x_scatter_data = []
             y_scatter_data = []
             for y, row in enumerate(grid_z):
                 for x, cell in enumerate(row):
-                    if cell != 70:
+                    if cell != 0:
                         x_scatter_data.append(x)
                         y_scatter_data.append(63 - y)
 
