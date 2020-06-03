@@ -174,14 +174,14 @@ while(True):
                         
     x_offset = 75
     y_offset = 90
-    if status == "high" or status == "normal":
-        time.sleep(2)
     if face_in_frame:
         frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
     else:
         frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
     #out.write(frame)
     cv2.imshow('therm', frame)
+    if status == "high" or status == "normal":
+        time.sleep(2)
     #out.write(frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
