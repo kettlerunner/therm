@@ -76,6 +76,7 @@ while(True):
             tx = tx - (bx-240)
             bx = tx + 150 
         img = img[ty:ty+150, tx:bx]
+        img = cv2.resize(img,(300,300))
         faces = faces[np.argmax(face_sizes):np.argmax(face_sizes)+1]
     else:
         tx = int(img.shape[1]/2 - 75)
