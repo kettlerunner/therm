@@ -160,8 +160,10 @@ while(True):
                 draw_label(frame, label, (490, 250), (255,255,255))
                 if display_temp >= 101.0:
                     frame[300:400, 550:650] = stop
+                    time.sleep(5)
                 else:
                     frame[300:400, 550:650] = go
+                    time.sleep(5)
             else:
                 label = "Reading Temp. Please Wait."
                 draw_label(frame, label, (490, 250), (255,255,255))
