@@ -180,8 +180,6 @@ while(True):
         frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
     #out.write(frame)
     cv2.imshow('therm', frame)
-    if status == "high" or status == "normal":
-        time.sleep(2)
     #out.write(frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
