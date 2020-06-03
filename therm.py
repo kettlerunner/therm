@@ -208,15 +208,15 @@ while(True):
                 face_in_frame = False
             else:
                 if room_temp > 73:
-                    display_temp = temp_reading + 16
+                    display_temp = temp_reading + 14
                 elif room_temp > 72:
-                    display_temp = temp_reading + 17
+                    display_temp = temp_reading + 15
                 elif room_temp > 70:
-                    display_temp = temp_reading + 18
+                    display_temp = temp_reading + 16
                 elif room_temp > 65:
-                    display_temp = temp_reading + 19
+                    display_temp = temp_reading + 17
                 else:
-                    display_temp = temp_reading + 20
+                    display_temp = temp_reading + 18
                 label = "Observed Temp: {0:.12f} F".format(display_temp)
                 draw_label(frame, label, (490, 250), (255,255,255))
                 if display_temp >= 100.0:
