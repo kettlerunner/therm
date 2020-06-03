@@ -64,23 +64,23 @@ while(True):
         face_sizes.append(w*h)
         cv2.rectangle(img, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
         print(w, h)
-    #if len(face_sizes) > 0:
-    #    (x, y, w, h) = faces[np.argmax(face_sizes)]
-    #    tx = int(x+w/2-150)
-    #    ty = int(y+h/2-150)
-    #    if tx < 0: tx = 0
-    #    if ty < 0: ty = 0
-    #    bx = tx + 300
-    #    by = ty + 300
-    #    if bx > 480:
-    #        tx = tx - (bx-480)
-    #        bx = tx + 300 
-    #    img = img[ty:ty+300, tx:bx]
-    #    faces = faces[np.argmax(face_sizes):np.argmax(face_sizes)+1]
-    #else:
-    #    tx = int(img.shape[1]/2 - 150)
-    #    ty = int(img.shape[0]/2 - 150)
-    #    img = img[ty:ty+300, tx:tx+300]
+    if len(face_sizes) > 0:
+        (x, y, w, h) = faces[np.argmax(face_sizes)]
+        tx = int(x+w/2-75)
+        ty = int(y+h/2-75)
+        if tx < 0: tx = 0
+        if ty < 0: ty = 0
+        bx = tx + 15
+        by = ty + 15
+        if bx > 240:
+            tx = tx - (bx-240)
+            bx = tx + 150 
+        img = img[ty:ty+150, tx:bx]
+        faces = faces[np.argmax(face_sizes):np.argmax(face_sizes)+1]
+    else:
+        tx = int(img.shape[1]/2 - 75)
+        ty = int(img.shape[0]/2 - 75)
+        img = img[ty:ty+150, tx:tx+150]
             
     pixels = np.asarray(amg.pixels).flatten()
     label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
