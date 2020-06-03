@@ -97,15 +97,16 @@ while(True):
     if type(faces) is tuple:
         frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
         if face_in_frame:
-            if display_temp >= 100:
+            #if display_temp >= 100:
+            if display_temp <= 115:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
                     from_="+19202602260",
                     to="+19206295560"
                 )
-            display_temp = 98.6
-            face_in_frame = False
+        display_temp = 98.6
+        face_in_frame = False
     else:
         max_face_index = 0
         max_face_size = 0
