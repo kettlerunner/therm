@@ -221,7 +221,7 @@ while(True):
             group_y = 0
             group_h = 0
             temp_reading = 0
-            while i < group_count:
+            while i <= group_count:
                 zone_x = -1
                 zone_w = 0
                 zone_y = 0
