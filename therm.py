@@ -34,16 +34,13 @@ auth_token = os.environ['AUTH_TOKEN']
 
 status = "reading"
 face_in_frame = False
-temp_readings = []
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
 face_cascade = cv2.CascadeClassifier('/home/pi/Scripts/therm/haarcascade_frontalface_default.xml')
 i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
-ambient_temp = [ 65 ]
 temp_offset = 25.0
-alpha = 1
 display_temp = 98.6
 room_temp = 65.0
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
@@ -107,16 +104,7 @@ while(True):
                     from_="+19202602260",
                     to="+19206295560"
                 )
-            if display_temp < 100:
-                client = Client(account_sid, auth_token)
-                client.messages.create(
-                    body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
-                    from_="+19202602260",
-                    to="+19206295560"
-                )
-            corrected_temp = [ 98.6 ]
             display_temp = 98.6
-            temp_readings = []
             face_in_frame = False
     else:
         max_face_index = 0
@@ -136,7 +124,6 @@ while(True):
                 mh = h
             i += 1
         if face_in_frame == False:
-            temp_readings = []
             face_in_frame = True
         if mh*mw < 2500:
             label = "Please step closer."
