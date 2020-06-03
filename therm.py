@@ -111,10 +111,9 @@ while(True):
                     to="+19206295560"
                 )
             if display_temp < 100:
-                message_body = "A scan of {temp:.1f} F was detected by Thermie. \n\nRoom temp: {room_temp:.1f} F \nalpha: {alpha:.4}"
                 client = Client(account_sid, auth_token)
                 client.messages.create(
-                    body=message_body.format(temp=display_temp, room_temp = room_temp, alpha=alpha),
+                    body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
                     from_="+19202602260",
                     to="+19206295560"
                 )
