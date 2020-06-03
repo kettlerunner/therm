@@ -253,8 +253,10 @@ while(True):
                     temp_reading = zone_average
                 ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:,1], s=100, c='blue')
                 ax.scatter(series[:,0], series[:,1], label=pred_y[pred_y == i], s=25, c=colors[i % 6])
-                ax.set_xlim(group_x, group_x + group_w)
-                ax.set_ylim(group_y, group_y + group_h)
+                #ax.set_xlim(group_x, group_x + group_w)
+                #ax.set_ylim(group_y, group_y + group_h)
+                print(group_x, group_x + group_w)
+                print(group_y, group_y + group_h)
                 i += 1
             print("Group Number: {}".format(group_index), " Temp: {:.2f} F".format(temp_reading), " Size {}".format(max_size))
             fig.tight_layout()
