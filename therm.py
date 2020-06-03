@@ -147,9 +147,11 @@ while(True):
         if mh*mw < 2500:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
+            frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
         elif mh*mw >= 6000:
             label = "Please step back a bit."
             draw_label(img, label, (20, 30), (255, 255, 255)) 
+            frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
         else:
             temp_scan = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
             pixels_f = (9/5)*pixels+32
