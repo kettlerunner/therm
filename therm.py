@@ -70,8 +70,8 @@ while(True):
         ty = int(y+h/2-75)
         if tx < 0: tx = 0
         if ty < 0: ty = 0
-        bx = tx + 15
-        by = ty + 15
+        bx = tx + 150
+        by = ty + 150
         if bx > 240:
             tx = tx - (bx-240)
             bx = tx + 150 
