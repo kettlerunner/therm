@@ -47,7 +47,6 @@ amg = adafruit_amg88xx.AMG88XX(i2c)
 ambient_temp = [ 65 ]
 temp_offset = 25.0
 alpha = 1
-corrected_temp = [ 98.6 ]
 display_temp = 98.6
 room_temp = 65.0
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
@@ -103,25 +102,6 @@ while(True):
     label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
     draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
-        if np.std(pixels) < 1.5:
-            if len(ambient_temp) == 100:
-                ambient_temp = ambient_temp[1:]
-            temp_scan = np.asarray(amg.pixels).flatten()
-            temp_scan_f = (9/5)*temp_scan + 32
-            room_f = temp_scan_f[temp_scan_f > 50.0]
-            room_f = room_f[room_f < 75.0]
-            if len(room_f) >= 1:
-                ambient_temp.append( np.average(room_f))
-            room_temp = np.average(ambient_temp)
-            #if room_temp < 70:
-            #    client = Client(account_sid, auth_token)
-            #    client.messages.create(
-            #        body="Um, it's getting a bit cold in here. \n\nTemp: {0:.1f} F".format(display_temp),
-            #        media_url=['https://precisionathleticswi.com/images/jack_on_ice.jpg'],
-            #        from_="+19202602260",
-            #        to="+19206295560"
-            #    )
-        draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
             if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) >= 1:
                 client = Client(account_sid, auth_token)
@@ -142,47 +122,34 @@ while(True):
             display_temp = 98.6
             temp_readings = []
             face_in_frame = False
-            
-    for (x, y, w, h) in faces:
+    else:
+        max_face_index = 0
+        max_face_size = 0
+        mx = 0
+        my = 0
+        mw = 0
+        mh = 0
+        i = 0
+        for (x, y, w, h) in faces:
+            if max_face_size < w*h:
+                max_face_index = i
+                max_face_size = w*h
+                mx = x
+                my = y
+                mw = w
+                mh = h
+            i += 1
         if face_in_frame == False:
             temp_readings = []
-        face_in_frame = True
-        if h*w < 2500:
+            face_in_frame = True
+        if mh*mw < 2500:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
-        elif h*w >= 6000:
+        elif mh*mw >= 6000:
             label = "Please step back a bit."
             draw_label(img, label, (20, 30), (255, 255, 255)) 
         else:
             temp_scan = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
-            temp_scan_f = (9/5)*temp_scan + 32
-            human_f = temp_scan_f[temp_scan_f > 70.0]
-            human_f = human_f[human_f < 95.0]
-            temp_readings.append(np.average(human_f) + temp_offset)                    
-            corrected_temps = temp_readings
-            if len(corrected_temp) > 10 or np.std(corrected_temp) > 0.10:
-                corrected_temp = corrected_temp[1:]
-            corrected_temp.append(np.average(corrected_temps))
-            display_temp = np.average(corrected_temp)
-            alpha = np.std(corrected_temp)
-            label = "alpha: {0:.4f}".format(np.std(corrected_temp))
-            draw_label(frame, label, (490, 270), (255,255,255))
-            label = "Temp: {0:.1f} F".format(display_temp)
-            draw_label(img, label, (40, 30), (255,255,255))
-            if alpha <= 0.05:
-                label = "Observed Temp: {0:.1f} F".format(display_temp)
-                draw_label(frame, label, (490, 250), (255,255,255))
-                if display_temp >= 101.0:
-                    frame[300:400, 550:650] = stop
-                    status = "high"
-                else:
-                    frame[300:400, 550:650] = go
-                    status = "normal"
-            else:
-                label = "Reading Temp. Please Wait."
-                draw_label(frame, label, (490, 250), (255,255,255))
-                frame[300:400, 550:650] = wait_
-                status = "reading"
             pixels_f = (9/5)*pixels+32
             grid_z = griddata(points, pixels_f, (grid_x, grid_y), method='cubic')
             flat_grid = grid_z.flatten()
@@ -197,7 +164,6 @@ while(True):
                     if cell != 0:
                         x_scatter_data.append(x)
                         y_scatter_data.append(63 - y)
-
             found_groups = False
             group_count = 0
             data_grid = np.dstack((x_scatter_data, y_scatter_data))[0]
@@ -216,39 +182,17 @@ while(True):
             i = 0
             max_size = 0
             group_index = 0
-            group_x = 0
-            group_w = 0
-            group_y = 0
-            group_h = 0
             temp_reading = 0
             while i < group_count:
-                zone_x = -1
-                zone_w = 0
-                zone_y = 0
-                zone_h = 0
                 series = data_grid[pred_y == i]
                 total = 0
                 data_buffer = []
                 for cell in series:
                     data_buffer.append(grid_z[63-cell[1]][cell[0]])
-                    if zone_x == -1:
-                        zone_x = cell[0]
-                        zone_w = zone_x - cell[0]
-                        zone_y = 63 - cell[1]
-                    if zone_x > cell[0]: 
-                        zone_x = cell[0]
-                        zone_w = zone_x - cell[0]
-                    if zone_y < 63 - cell[1]:
-                        zone_y = 63 - cell[1]
-                        zone_h = zone_y - (63-cell[1])
                     total += grid_z[63 - cell[1]][cell[0]]
                 zone_average = total / len(series)
                 if max_size < len(data_buffer):
                     max_size = len(data_buffer)
-                    group_x = zone_x
-                    group_w = zone_w
-                    group_y = zone_y
-                    group_h = zone_h
                     group_index = i
                     temp_reading = zone_average
                 ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:,1], s=100, c='blue')
@@ -261,6 +205,19 @@ while(True):
             print("Group Number: {}".format(group_index), " Temp: {:.2f} F".format(temp_reading), " Size {}".format(max_size))
             fig.tight_layout()
             fig.canvas.draw()
+            label = "Observed Temp: {0:.1f} F".format(temp_reading)
+            draw_label(frame, label, (490, 250), (255,255,255))
+            if display_temp >= 100.0:
+                frame[300:400, 550:650] = stop
+                status = "high"
+            else:
+                frame[300:400, 550:650] = go
+                status = "normal"
+            #else:
+            #    label = "Reading Temp. Please Wait."
+            #    draw_label(frame, label, (490, 250), (255,255,255))
+            #    frame[300:400, 550:650] = wait_
+            #    status = "reading"
    
     x_offset = 75
     y_offset = 90
