@@ -94,8 +94,8 @@ while(True):
             
     pixels = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
     label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
-    draw_label(frame, label, (490,210), (255,255,255))
-    label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
+    #draw_label(frame, label, (490,210), (255,255,255))
+    #label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
     draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
         frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
