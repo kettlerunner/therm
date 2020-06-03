@@ -162,8 +162,11 @@ while(True):
                     group_count = j
                     found_groups = True
             if group_count > 0:
-                kmeans = KMeans(n_clusters=group_count, init="k-means++", max_iter=10, n_init=10, random_state=0)
-                pred_y = kmeans.fit_predict(data_grid)
+                try:
+                    kmeans = KMeans(n_clusters=group_count, init="k-means++", max_iter=10, n_init=10, random_state=0)
+                    pred_y = kmeans.fit_predict(data_grid)
+                except:
+                    print("Lost track of object.")
             i = 0
             max_size = 0
             group_index = 0
