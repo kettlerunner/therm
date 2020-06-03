@@ -56,6 +56,11 @@ stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+fig = plt.figure(num='AMG8833 Thermal Scanner', figsize=(18.0, 9.0));
+points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0,64)]
+grid_x, grid_y = np.mgrid[0:7:64j, 0:7:64j]
+ax = fig.add_subplot(111)
+colors = ['b', 'c', 'k', 'g', 'm', 'y' ]
 
 #fourcc = cv2.VideoWriter_fourcc(*'XVID')
 #out = cv2.VideoWriter('therm.avi', fourcc, 10.0, (800,480))
@@ -177,7 +182,61 @@ while(True):
                 draw_label(frame, label, (490, 250), (255,255,255))
                 frame[300:400, 550:650] = wait_
                 status = "reading"
-                        
+            pixels_f = (9/5)*pixels+32
+            grid_z = griddata(points, pixels_f, (grid_x, grid_y), method='cubic')
+            flat_grid = grid_z.flatten()
+            filtered_flat_grid = flat_grid[flat_grid >=70]
+            flat_grid = filtered_flat_grid[filtered_flat_grid <=95]
+            hist, bin_edges = np.histogram(flat_grid, bins=16)
+            grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 70
+            x_scatter_data = []
+            y_scatter_data = []
+            for y, row in enumerate(grid_z):
+                for x, cell in enumerate(row):
+                    if cell != 70:
+                        x_scatter_data.append(x)
+                        y_scatter_data.append(63 - y)
+
+            found_groups = False
+            group_count = 0
+            data_grid = np.dstack((x_scatter_data, y_scatter_data))[0]
+            j = 1
+            ax.clear()
+            while found_groups == False and j < 11:
+                kmeans = KMeans(n_clusters=j, init='k-means++', max_iter=10, n_init=10, random_state=0)
+                kmeans.fit(data_grid)
+                j += 1
+                if kmeans.inertia_ < 15000 and found_groups == False:
+                    group_count = j
+                    found_groups = True
+            if group_count > 0:
+                kmeans = KMeans(n_clusters=group_count, init="k-means++", max_iter=10, n_init=10, random_state=0)
+                pred_y = kmeans.fit_predict(data_grid)
+            i = 0
+            max_size = 0
+            group_index = 0
+            temp_reading = 0
+            while i < group_count:
+                series = data_grid[pred_y == i]
+                total = 0
+                data_buffer = []
+                for cell in series:
+                    data_buffer.append(grid_z[63-cell[1]][cell[0]])
+                    total += grid_z[63 - cell[1]][cell[0]]
+                zone_average = total / len(series)
+                if max_size < len(data_buffer):
+                    max_size = len(data_buffer)
+                    group_index = i
+                    temp_reading = zone_average
+                ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:,1], s=100, c='blue')
+                ax.scatter(series[:,0], series[:,1], label=pred_y[pred_y == i], s=25, c=colors[i % 6])
+                ax.set_xlim(0, 64)
+                ax.set_ylim(0, 64)
+                i += 1
+            print("Group Number: {}".format(group_index), " Temp: {:.2f} F".format(temp_reading), " Size {}".format(max_size))
+            fig.tight_layout()
+            fig.canvas.draw()
+   
     x_offset = 75
     y_offset = 90
     if face_in_frame:
