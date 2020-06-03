@@ -97,8 +97,7 @@ while(True):
     if type(faces) is tuple:
         frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
         if face_in_frame:
-            #if display_temp >= 100:
-            if display_temp <= 115:
+            if display_temp >= 100:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
@@ -181,13 +180,11 @@ while(True):
                     data_buffer.append(grid_z[63-cell[1]][cell[0]])
                     total += grid_z[63 - cell[1]][cell[0]]
                 zone_average = total / len(series)
-                print(i, min(series[:,[0]])[0], min(series[:,[1]])[0], max(series[:,[0]])[0], max(series[:,[1]])[0], len(data_buffer))
                 if max_size < len(data_buffer):
                     max_size = len(data_buffer)
                     group_index = i
                     temp_reading = zone_average
                 i += 1
-            print("Group Number: {}".format(group_index), " Temp: {:.2f} F".format(temp_reading), " Size {}".format(max_size))
             if max_size < 20:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
