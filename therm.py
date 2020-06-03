@@ -3,6 +3,7 @@
 import os
 import busio
 import board
+import time
 import adafruit_amg88xx
 import numpy as np
 import cv2
@@ -133,7 +134,7 @@ while(True):
         if face_in_frame == False:
             temp_readings = []
         face_in_frame = True
-        if h*w < 4000:
+        if h*w < 2500:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
         elif h*w >= 35000:
