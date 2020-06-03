@@ -138,7 +138,7 @@ while(True):
         if h*w < 2500:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
-        elif h*w >= 35000:
+        elif h*w >= 6000:
             label = "Please step back a bit."
             draw_label(img, label, (20, 30), (255, 255, 255)) 
         else:
