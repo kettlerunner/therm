@@ -234,12 +234,12 @@ while(True):
                     if zone_x == -1:
                         zone_x = cell[0]
                         zone_w = zone_x - cell[0]
-                        zone_y = cell[1]
+                        zone_y = 63 - cell[1]
                     if zone_x > cell[0]: 
                         zone_x = cell[0]
                         zone_w = zone_x - cell[0]
-                    if zone_y < 63-cell[1]:
-                        zone_y = 63- cell[1]
+                    if zone_y < 63 - cell[1]:
+                        zone_y = 63 - cell[1]
                         zone_h = zone_y - (63-cell[1])
                     total += grid_z[63 - cell[1]][cell[0]]
                 zone_average = total / len(series)
