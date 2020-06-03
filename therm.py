@@ -205,7 +205,7 @@ while(True):
             print("Group Number: {}".format(group_index), " Temp: {:.2f} F".format(temp_reading), " Size {}".format(max_size))
             fig.tight_layout()
             fig.canvas.draw()
-            if max_size < 50:
+            if max_size < 70:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[300:400, 550:650] = wait_
