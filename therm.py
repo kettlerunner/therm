@@ -103,14 +103,14 @@ while(True):
     draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
         if face_in_frame:
-            if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) >= 1:
+            if display_temp >= 100:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
                     from_="+19202602260",
                     to="+19206295560"
                 )
-            if display_temp < 100 and alpha <= 0.05 and len(corrected_temp) >= 1:
+            if display_temp < 100:
                 message_body = "A scan of {temp:.1f} F was detected by Thermie. \n\nRoom temp: {room_temp:.1f} F \nalpha: {alpha:.4}"
                 client = Client(account_sid, auth_token)
                 client.messages.create(
@@ -203,6 +203,7 @@ while(True):
             print("Group Number: {}".format(group_index), " Temp: {:.2f} F".format(temp_reading), " Size {}".format(max_size))
             fig.tight_layout()
             fig.canvas.draw()
+            display_temp = temp_reading
             label = "Observed Temp: {0:.1f} F".format(temp_reading)
             draw_label(frame, label, (490, 250), (255,255,255))
             if display_temp >= 100.0:
@@ -210,13 +211,7 @@ while(True):
                 status = "high"
             else:
                 frame[300:400, 550:650] = go
-                status = "normal"
-            #else:
-            #    label = "Reading Temp. Please Wait."
-            #    draw_label(frame, label, (490, 250), (255,255,255))
-            #    frame[300:400, 550:650] = wait_
-            #    status = "reading"
-   
+                status = "normal"   
     x_offset = 75
     y_offset = 90
     if face_in_frame:
