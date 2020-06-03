@@ -61,6 +61,8 @@ points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0,64)]
 grid_x, grid_y = np.mgrid[0:7:64j, 0:7:64j]
 ax = fig.add_subplot(111)
 colors = ['b', 'c', 'k', 'g', 'm', 'y' ]
+x_offset = 75
+y_offset = 90
 
 #fourcc = cv2.VideoWriter_fourcc(*'XVID')
 #out = cv2.VideoWriter('therm.avi', fourcc, 10.0, (800,480))
@@ -102,6 +104,7 @@ while(True):
     label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
     draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
+        frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
         if face_in_frame:
             if display_temp >= 100:
                 client = Client(account_sid, auth_token)
@@ -224,13 +227,8 @@ while(True):
                     status = "high"
                 else:
                     frame[300:400, 550:650] = go
-                    status = "normal"   
-    x_offset = 75
-    y_offset = 90
-    if face_in_frame:
-        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
-    else:
-        frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
+                    status = "normal"  
+            frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
     #out.write(frame)
     cv2.imshow('therm', frame)
     #out.write(frame)
