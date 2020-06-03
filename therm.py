@@ -90,7 +90,7 @@ while(True):
         img = img[ty:ty+150, tx:tx+150]
             
     pixels = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
-    label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
+    label = "Room Temp: {0:.1f} F".format(65)
     #draw_label(frame, label, (490,210), (255,255,255))
     #label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
     draw_label(frame, label, (490, 230), (255,255,255))
