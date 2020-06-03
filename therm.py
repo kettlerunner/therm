@@ -136,6 +136,7 @@ while(True):
             i += 1
         if face_in_frame == False:
             face_in_frame = True
+            body_temp = []
         if mh*mw < 2500:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
@@ -208,15 +209,19 @@ while(True):
                 face_in_frame = False
             else:
                 if room_temp > 73:
-                    display_temp = temp_reading + 14
+                    correction_factor = 14
                 elif room_temp > 72:
-                    display_temp = temp_reading + 15
+                    correction_factor = 14
                 elif room_temp > 70:
-                    display_temp = temp_reading + 16
+                    correction_factor = 16
                 elif room_temp > 65:
-                    display_temp = temp_reading + 17
+                    correction_factor = 17
                 else:
-                    display_temp = temp_reading + 18
+                    correction_factor = 18
+                if len(body_temp) >= 10:
+                    body_temp = body_temp[1:]
+                body_temp.append(temp_reading + correction_factor)
+                display_temp = np.average(temp_reading)
                 label = "Observed Temp: {0:.2f} F".format(display_temp)
                 draw_label(frame, label, (490, 250), (255,255,255))
                 if display_temp >= 100.0:
