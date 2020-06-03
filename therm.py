@@ -7,6 +7,10 @@ import time
 import adafruit_amg88xx
 import numpy as np
 import cv2
+import matplotlib as cm
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+from scipy.interpolate import gridata
 from twilio.rest import Client
 
 def draw_label(img, text, pos, bg_color):
@@ -50,6 +54,11 @@ stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
+fig = plt.figure(num="Thermal Scanner", figsize(2,2));
+points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0,64)]
+grid_x, grid_y = np.mgrid[0:7:64j, 0:7:64j]
+ax = fig.add_subplot(111)
 
 #fourcc = cv2.VideoWriter_fourcc(*'XVID')
 #out = cv2.VideoWriter('therm.avi', fourcc, 10.0, (800,480))
