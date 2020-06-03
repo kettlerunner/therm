@@ -192,7 +192,7 @@ while(True):
                     data_buffer.append(grid_z[63-cell[1]][cell[0]])
                     total += grid_z[63 - cell[1]][cell[0]]
                 zone_average = total / len(series)
-                print(i, min(series[:,[0]])[0], min(series[:,[1]])[0], min(series[:,[0]])[0], min(series[:,[1]])[0], len(data_buffer))
+                print(i, min(series[:,[0]])[0], min(series[:,[1]])[0], max(series[:,[0]])[0], max(series[:,[1]])[0], len(data_buffer))
                 if max_size < len(data_buffer):
                     max_size = len(data_buffer)
                     group_index = i
