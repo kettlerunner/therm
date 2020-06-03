@@ -216,6 +216,14 @@ while(True):
             i = 0
             max_size = 0
             group_index = 0
+            group_x = 0
+            group_w = 0
+            group_y = 0
+            group_h = 0
+            zone_x = -1
+            zone_w = 0
+            zone_y = 0
+            zone_h = 0
             temp_reading = 0
             while i < group_count:
                 series = data_grid[pred_y == i]
@@ -223,16 +231,30 @@ while(True):
                 data_buffer = []
                 for cell in series:
                     data_buffer.append(grid_z[63-cell[1]][cell[0]])
+                    if zone_x == -1:
+                        zone_x = cell[0]
+                        zone_w = zone_x - cell[0]
+                        zone_y = cell[1]
+                    if zone_x > cell[0]: 
+                        zone_x = cell[0]
+                        zone_w = zone_x - cell[0]
+                    if zone_y < 63-cell[1]:
+                        zone_y = 63- cell[1]
+                        zone_h = zone_y - (63-cell[1])
                     total += grid_z[63 - cell[1]][cell[0]]
                 zone_average = total / len(series)
                 if max_size < len(data_buffer):
                     max_size = len(data_buffer)
+                    group_x = zone_x
+                    group_w = zone_w
+                    group_y = zone_y
+                    group_h = zone_h
                     group_index = i
                     temp_reading = zone_average
                 ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:,1], s=100, c='blue')
                 ax.scatter(series[:,0], series[:,1], label=pred_y[pred_y == i], s=25, c=colors[i % 6])
-                ax.set_xlim(0, 64)
-                ax.set_ylim(0, 64)
+                ax.set_xlim(group_x, group_x + group_w)
+                ax.set_ylim(group_y, group_y + group_h)
                 i += 1
             print("Group Number: {}".format(group_index), " Temp: {:.2f} F".format(temp_reading), " Size {}".format(max_size))
             fig.tight_layout()
