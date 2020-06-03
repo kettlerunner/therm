@@ -28,6 +28,7 @@ auth_token = os.environ['AUTH_TOKEN']
 
 #out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (800,480))
 
+status = "reading"
 face_in_frame = False
 temp_readings = []
 cap = cv2.VideoCapture(0)
@@ -110,14 +111,14 @@ while(True):
             #    )
         draw_label(img, 'No Face Detected', (20,30), (255,255,255))
         if face_in_frame:
-            if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) > 1:
+            if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) >= 1:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
                     from_="+19202602260",
                     to="+19206295560"
                 )
-            if display_temp < 100 and alpha <= 0.05 and len(corrected_temp) > 1:
+            if display_temp < 100 and alpha <= 0.05 and len(corrected_temp) >= 1:
                 message_body = "A scan of {temp:.1f} F was detected by Thermie. \n\nRoom temp: {room_temp:.1f} F \nalpha: {alpha:.4}"
                 client = Client(account_sid, auth_token)
                 client.messages.create(
@@ -161,17 +162,20 @@ while(True):
                 draw_label(frame, label, (490, 250), (255,255,255))
                 if display_temp >= 101.0:
                     frame[300:400, 550:650] = stop
-                    time.sleep(5)
+                    status = "high"
                 else:
                     frame[300:400, 550:650] = go
-                    time.sleep(5)
+                    status = "normal"
             else:
                 label = "Reading Temp. Please Wait."
                 draw_label(frame, label, (490, 250), (255,255,255))
                 frame[300:400, 550:650] = wait_
+                status = "reading"
                         
     x_offset = 75
     y_offset = 90
+    if status == "high" or status == "normal":
+        time.sleep(2)
     if face_in_frame:
         frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
     else:
