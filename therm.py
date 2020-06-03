@@ -137,7 +137,7 @@ while(True):
         if face_in_frame == False:
             face_in_frame = True
             body_temp = []
-        if mh*mw < 2500:
+        if mh*mw < 1000:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
             frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
@@ -221,7 +221,7 @@ while(True):
                 if len(body_temp) >= 10:
                     body_temp = body_temp[1:]
                 body_temp.append(temp_reading + correction_factor)
-                display_temp = np.average(temp_reading)
+                display_temp = np.average(body_temp)
                 label = "Observed Temp: {0:.2f} F".format(display_temp)
                 draw_label(frame, label, (490, 250), (255,255,255))
                 if display_temp >= 100.0:
