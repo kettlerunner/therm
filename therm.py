@@ -186,13 +186,13 @@ while(True):
             group_dims = []
             while i < group_count:
                 series = data_grid[pred_y == i]
-                print(min(series[:,[0]]), min(series[:,[1]]))
                 total = 0
                 data_buffer = []
                 for cell in series:
                     data_buffer.append(grid_z[63-cell[1]][cell[0]])
                     total += grid_z[63 - cell[1]][cell[0]]
                 zone_average = total / len(series)
+                print(i, min(series[:,[0]])[0], min(series[:,[1]])[0], min(series[:,[0]])[0], min(series[:,[1]])[0], len(data_buffer))
                 if max_size < len(data_buffer):
                     max_size = len(data_buffer)
                     group_index = i
