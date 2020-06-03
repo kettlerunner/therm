@@ -202,22 +202,22 @@ while(True):
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[300:400, 550:650] = wait_
                 face_in_frame = False
-            elif max_size > 120:
+            elif max_size > 150:
                 label = "Please step back a bit."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[300:400, 550:650] = wait_
                 face_in_frame = False
             else:
                 if room_temp > 73:
-                    correction_factor = 14
+                    correction_factor = 15
                 elif room_temp > 72:
-                    correction_factor = 14
-                elif room_temp > 70:
                     correction_factor = 16
-                elif room_temp > 65:
+                elif room_temp > 70:
                     correction_factor = 17
-                else:
+                elif room_temp > 65:
                     correction_factor = 18
+                else:
+                    correction_factor = 19
                 if len(body_temp) >= 10:
                     body_temp = body_temp[1:]
                 body_temp.append(temp_reading + correction_factor)
