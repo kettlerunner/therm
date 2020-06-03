@@ -7,11 +7,9 @@ import busio
 import board
 import cv2
 import adafruit_amg88xx
-import matplotlib as cm
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 from twilio.rest import Client
 
@@ -34,7 +32,6 @@ auth_token = os.environ['AUTH_TOKEN']
 
 #out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (800,480))
 
-plt.ion()
 status = "reading"
 face_in_frame = False
 temp_readings = []
@@ -56,11 +53,8 @@ stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-fig = plt.figure(num='AMG8833 Thermal Scanner', figsize=(2.0, 2.0));
 points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0,64)]
 grid_x, grid_y = np.mgrid[0:7:64j, 0:7:64j]
-ax = fig.add_subplot(111)
-colors = ['b', 'c', 'k', 'g', 'm', 'y' ]
 x_offset = 75
 y_offset = 90
 
@@ -172,7 +166,6 @@ while(True):
             group_count = 0
             data_grid = np.dstack((x_scatter_data, y_scatter_data))[0]
             j = 1
-            ax.clear()
             while found_groups == False and j < 11:
                 kmeans = KMeans(n_clusters=j, init='k-means++', max_iter=10, n_init=10, random_state=0)
                 kmeans.fit(data_grid)
@@ -202,14 +195,8 @@ while(True):
                     max_size = len(data_buffer)
                     group_index = i
                     temp_reading = zone_average
-                ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:,1], s=100, c='blue')
-                ax.scatter(series[:,0], series[:,1], label=pred_y[pred_y == i], s=25, c=colors[i % 6])
-                #ax.set_xlim(group_x, group_x + group_w)
-                #ax.set_ylim(group_y, group_y + group_h)
                 i += 1
             print("Group Number: {}".format(group_index), " Temp: {:.2f} F".format(temp_reading), " Size {}".format(max_size))
-            fig.tight_layout()
-            fig.canvas.draw()
             if max_size < 20:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
