@@ -97,7 +97,7 @@ while(True):
         ty = int(img.shape[0]/2 - 75)
         img = img[ty:ty+150, tx:tx+150]
             
-    pixels = np.asarray(amg.pixels).flatten()
+    pixels = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
     label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
     draw_label(frame, label, (490,210), (255,255,255))
     label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
@@ -154,7 +154,7 @@ while(True):
             label = "Please step back a bit."
             draw_label(img, label, (20, 30), (255, 255, 255)) 
         else:
-            temp_scan = np.asarray(amg.pixels).flatten()
+            temp_scan = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
             temp_scan_f = (9/5)*temp_scan + 32
             human_f = temp_scan_f[temp_scan_f > 70.0]
             human_f = human_f[human_f < 95.0]
