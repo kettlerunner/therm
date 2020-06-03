@@ -186,7 +186,7 @@ while(True):
             group_dims = []
             while i < group_count:
                 series = data_grid[pred_y == i]
-                print(series[:,[1]])
+                print(series[:,[0]], series[:,[1]])
                 total = 0
                 data_buffer = []
                 for cell in series:
