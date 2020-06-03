@@ -7,6 +7,12 @@ import adafruit_amg88xx
 import numpy as np
 import cv2
 from twilio.rest import Client
+import time
+import matplotlib as cm
+import pandas as pd
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+from scipy.interpolate import griddata
 
 def draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
