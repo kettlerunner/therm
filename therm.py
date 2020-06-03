@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 
 import os
+import time
+import math
 import busio
 import board
-import time
-import adafruit_amg88xx
-import numpy as np
 import cv2
+import adafruit_amg88xx
+import matplotlib as cm
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+from scipy.interpolate import griddata
 from twilio.rest import Client
 
 def draw_label(img, text, pos, bg_color):
