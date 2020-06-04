@@ -109,7 +109,7 @@ while(True):
             ambient_temp.append( np.average(room_f))
         room_temp = np.average(ambient_temp)
         if face_in_frame:
-            if display_temp >= 100:
+            if display_temp >= 80:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
