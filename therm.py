@@ -113,7 +113,7 @@ while(True):
         room_temp = np.average(ambient_temp)
         if face_in_frame:
             now = datetime.now()
-            current_time = now.strftime("%H:%M:%S")
+            current_time = now.strftime("%m/%d/%Y %H:%M:%S %p")
             output_data = { "Reading" : [display_temp], "Room_Temp" : [room_temp], "Face_Size" : [face_size], "Heat_Size" : [heat_size], "TOD" : [current_time]  }
             df = pd.DataFrame(output_data)
             if os.path.exists("data.csv"):
