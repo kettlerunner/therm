@@ -43,7 +43,7 @@ amg = adafruit_amg88xx.AMG88XX(i2c)
 temp_offset = 25.0
 display_temp = 98.6
 ambient_temp = []
-room_temp = 65.0
+room_temp = 0
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default2.png")
 wait_ = cv2.imread("/home/pi/Scripts/therm/static/img/clock.png")
@@ -97,16 +97,17 @@ while(True):
     draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
         frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
-        if np.std(pixels) < 2.0:
-            if len(ambient_temp) == 100:
-                ambient_temp = ambient_temp[1:]
-            temp_scan = np.asarray(amg.pixels).flatten()
-            temp_scan_f = (9/5)*temp_scan + 32
-            room_f = temp_scan_f[temp_scan_f > 50.0]
-            room_f = room_f[room_f < 75.0]
-            if len(room_f) >= 1:
-                ambient_temp.append( np.average(room_f))
-            room_temp = np.average(ambient_temp)
+        if room_temp == 0:
+            ambient_temp = []
+        if len(ambient_temp) == 100:
+            ambient_temp = ambient_temp[1:]
+        temp_scan = np.asarray(amg.pixels).flatten()
+        temp_scan_f = (9/5)*temp_scan + 32
+        room_f = temp_scan_f[temp_scan_f > 50.0]
+        room_f = room_f[room_f < 100.0]
+        if len(room_f) >= 1:
+            ambient_temp.append( np.average(room_f))
+        room_temp = np.average(ambient_temp)
         if face_in_frame:
             if display_temp >= 100:
                 client = Client(account_sid, auth_token)
