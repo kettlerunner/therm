@@ -7,6 +7,7 @@ import busio
 import board
 import cv2
 import adafruit_amg88xx
+from datetime import datetime
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
@@ -43,6 +44,8 @@ amg = adafruit_amg88xx.AMG88XX(i2c)
 temp_offset = 25.0
 display_temp = 98.6
 ambient_temp = []
+face_size = 0
+heat_size = 0
 room_temp = 0
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default2.png")
@@ -109,6 +112,14 @@ while(True):
             ambient_temp.append( np.average(room_f))
         room_temp = np.average(ambient_temp)
         if face_in_frame:
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            output_data = { "Reading" : [display_temp], "Room_Temp" [room_temp], "Face_Size" [face_size], "Heat_Size" [heat_size], "TOD" [current_time]  }
+            df = pd.DataFrame(output_data)
+            if os.path.exists("data.csv"):
+                df.to_csv('data.csv', mode='a', header=False)
+            else:
+                df.to_csv('data.csv', header=True)
             if display_temp >= 80:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
@@ -138,6 +149,7 @@ while(True):
         if face_in_frame == False:
             face_in_frame = True
             body_temp = []
+        face_size = mh*mw
         if mh*mw < 1000:
             label = "Please step closer."
             draw_label(img, label, (20, 30), (255, 255, 255))
@@ -195,6 +207,7 @@ while(True):
                 zone_average = total / len(series)
                 if max_size < len(data_buffer):
                     max_size = len(data_buffer)
+                    heat_size = max_size
                     group_index = i
                     temp_reading = zone_average
                 i += 1
