@@ -222,7 +222,13 @@ while(True):
                 frame[300:400, 550:650] = wait_
                 face_in_frame = False
             else:
-                if room_temp > 73:
+                if room_temp > 76:
+                    correction_factor = 14
+                elif room_temp > 75:
+                    correction_factor = 15
+                elif room_temp > 74:
+                    correction_factor = 15
+                elif room_temp > 73:
                     correction_factor = 16
                 elif room_temp > 72:
                     correction_factor = 17
