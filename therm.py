@@ -211,7 +211,7 @@ while(True):
                     group_index = i
                     temp_reading = zone_average
                 i += 1
-            if max_size < 20:
+            if max_size < 50:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[300:400, 550:650] = wait_
@@ -223,7 +223,7 @@ while(True):
                 face_in_frame = False
             else:
                 if room_temp > 76:
-                    correction_factor = 14
+                    correction_factor = 15
                 elif room_temp > 75:
                     correction_factor = 15
                 elif room_temp > 74:
