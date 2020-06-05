@@ -146,9 +146,6 @@ while(True):
                 mw = w
                 mh = h
             i += 1
-        if face_in_frame == False:
-            face_in_frame = True
-            body_temp = []
         face_size = mh*mw
         if mh*mw < 1000:
             label = "Please step closer."
@@ -161,6 +158,9 @@ while(True):
             frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
             face_in_frame == False
         else:
+            if face_in_frame == False:
+                face_in_frame = True
+                body_temp = []
             temp_scan = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
             pixels_f = (9/5)*pixels+32
             grid_z = griddata(points, pixels_f, (grid_x, grid_y), method='cubic')
@@ -218,7 +218,7 @@ while(True):
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[300:400, 550:650] = wait_
                 face_in_frame = False
-            elif heat_size > 120:
+            elif heat_size > 150:
                 label = "Please step back a bit."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[300:400, 550:650] = wait_
