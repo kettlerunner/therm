@@ -213,7 +213,7 @@ while(True):
                     group_index = i
                     temp_reading = zone_average
                 i += 1
-            if heat_size < 40:
+            if heat_size < 30:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[300:400, 550:650] = wait_
