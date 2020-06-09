@@ -104,8 +104,6 @@ while(True):
             #        from_="+19202602260",
             #        to="+19206295560"
             #    )
-        #draw_label(img, 'No Face Detected', (20,30), (255,255,255))
-        draw_label(img, 'Hello Dan Crouse', (20,30), (255,255,255))
         if face_in_frame:
             if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) > 1:
                 client = Client(account_sid, auth_token)
