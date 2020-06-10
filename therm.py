@@ -1,11 +1,17 @@
-#!/usr/bin/env python3
+except:#!/usr/bin/env python3
 
 import os
+import time
+import math
 import busio
 import board
-import adafruit_amg88xx
-import numpy as np
 import cv2
+import adafruit_amg88xx
+from datetime import datetime
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from scipy.interpolate import griddata
 from twilio.rest import Client
 
 def draw_label(img, text, pos, bg_color):
@@ -27,18 +33,20 @@ auth_token = os.environ['AUTH_TOKEN']
 
 #out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (800,480))
 
+status = "reading"
 face_in_frame = False
-temp_readings = []
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
 face_cascade = cv2.CascadeClassifier('/home/pi/Scripts/therm/haarcascade_frontalface_default.xml')
 i2c = busio.I2C(board.SCL, board.SDA)
 amg = adafruit_amg88xx.AMG88XX(i2c)
-ambient_temp = [ 65 ]
 temp_offset = 25.0
-alpha = 1
-corrected_temp = [ 98.6 ]
 display_temp = 98.6
-room_temp = 65.0
+ambient_temp = []
+face_size = 0
+heat_size = 0
+room_temp = 0
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background_infinite.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default2.png")
 wait_ = cv2.imread("/home/pi/Scripts/therm/static/img/clock.png")
@@ -46,6 +54,10 @@ stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
 go = cv2.imread("/home/pi/Scripts/therm/static/img/go.png")
 cv2.namedWindow('therm', cv2.WINDOW_FREERATIO)
 cv2.setWindowProperty('therm', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0,64)]
+grid_x, grid_y = np.mgrid[0:7:64j, 0:7:64j]
+x_offset = 75
+y_offset = 90
 
 #fourcc = cv2.VideoWriter_fourcc(*'XVID')
 #out = cv2.VideoWriter('therm.avi', fourcc, 10.0, (800,480))
@@ -61,52 +73,47 @@ while(True):
     for (x, y, w, h) in faces:
         face_sizes.append(w*h)
         cv2.rectangle(img, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
-    
+        
     if len(face_sizes) > 0:
         (x, y, w, h) = faces[np.argmax(face_sizes)]
-        tx = int(x+w/2-150)
-        ty = int(y+h/2-150)
+        tx = int(x+w/2-75)
+        ty = int(y+h/2-75)
         if tx < 0: tx = 0
         if ty < 0: ty = 0
-        bx = tx + 300
-        by = ty + 300
-        if bx > 480:
-            tx = tx - (bx-480)
-            bx = tx + 300 
-        img = img[ty:ty+300, tx:bx]
+        bx = tx + 150
+        by = ty + 150
+        if bx > 240:
+            tx = tx - (bx-240)
+            bx = tx + 150 
+        img = img[ty:ty+150, tx:bx]
+        img = cv2.resize(img,(300,300))
         faces = faces[np.argmax(face_sizes):np.argmax(face_sizes)+1]
     else:
-        tx = int(img.shape[1]/2 - 150)
-        ty = int(img.shape[0]/2 - 150)
-        img = img[ty:ty+300, tx:tx+300]
+        tx = int(img.shape[1]/2 - 75)
+        ty = int(img.shape[0]/2 - 75)
+        img = img[ty:ty+150, tx:tx+150]
             
-    pixels = np.asarray(amg.pixels).flatten()
-    label = "Room Temp: {0:.1f} F".format(np.average(ambient_temp))
+    pixels = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
+    label = "Room Temp: {0:.1f} F".format(room_temp)
     draw_label(frame, label, (490,210), (255,255,255))
     label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
     draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
-        if np.std(pixels) < 1.5:
-            if len(ambient_temp) == 100:
-                ambient_temp = ambient_temp[1:]
-            temp_scan = np.asarray(amg.pixels).flatten()
-            temp_scan_f = (9/5)*temp_scan + 32
-            room_f = temp_scan_f[temp_scan_f > 50.0]
-            room_f = room_f[room_f < 75.0]
-            if len(room_f) >= 1:
-                ambient_temp.append( np.average(room_f))
-            room_temp = np.average(ambient_temp)
-            #if room_temp < 70:
-            #    client = Client(account_sid, auth_token)
-            #    client.messages.create(
-            #        body="Um, it's getting a bit cold in here. \n\nTemp: {0:.1f} F".format(display_temp),
-            #        media_url=['https://precisionathleticswi.com/images/jack_on_ice.jpg'],
-            #        from_="+19202602260",
-            #        to="+19206295560"
-            #    )
-        draw_label(img, 'No Face Detected', (20,30), (255,255,255))
+        frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
+        cv2.imshow('therm', frame)
+        if room_temp == 0:
+            ambient_temp = []
+        if len(ambient_temp) == 100:
+            ambient_temp = ambient_temp[1:]
+        temp_scan = np.asarray(amg.pixels).flatten()
+        temp_scan_f = (9/5)*temp_scan + 32
+        room_f = temp_scan_f[temp_scan_f > 50.0]
+        room_f = room_f[room_f < 85]
+        if len(room_f) >= 1 and np.std(room_f) <= 1.50:
+            ambient_temp.append( np.average(room_f))
+        room_temp = np.average(ambient_temp)
         if face_in_frame:
-            if display_temp >= 100 and alpha <= 0.05 and len(corrected_temp) > 1:
+            if display_temp >= 100:
                 client = Client(account_sid, auth_token)
                 try:
                     client.messages.create(
@@ -121,55 +128,137 @@ while(True):
                     )
                 except:
                      print("Error sending messages. No network connection.")
-            corrected_temp = [ 98.6 ]
-            display_temp = 98.6
-            temp_readings = []
-            face_in_frame = False
-            
-    for (x, y, w, h) in faces:
-        if face_in_frame == False:
-            temp_readings = []
-        face_in_frame = True
-        if h*w < 4000:
-            label = "Please step closer."
-            draw_label(img, label, (20, 30), (255, 255, 255))
-        elif h*w >= 35000:
-            label = "Please step back a bit."
-            draw_label(img, label, (20, 30), (255, 255, 255)) 
-        else:
-            temp_scan = np.asarray(amg.pixels).flatten()
-            temp_scan_f = (9/5)*temp_scan + 32
-            human_f = temp_scan_f[temp_scan_f > 70.0]
-            human_f = human_f[human_f < 80.0]
-            temp_readings.append(np.average(human_f) + temp_offset)                    
-            corrected_temps = temp_readings
-            if len(corrected_temp) > 10 or np.std(corrected_temp) > 0.10:
-                corrected_temp = corrected_temp[1:]
-            corrected_temp.append(np.average(corrected_temps))
-            display_temp = np.average(corrected_temp)
-            alpha = np.std(corrected_temp)
-            label = "alpha: {0:.4f}".format(np.std(corrected_temp))
-            draw_label(frame, label, (490, 270), (255,255,255))
-            label = "Temp: {0:.1f} F".format(display_temp)
-            draw_label(img, label, (40, 30), (255,255,255))
-            if alpha <= 0.05:
-                label = "Observed Temp: {0:.1f} F".format(display_temp)
-                draw_label(frame, label, (490, 250), (255,255,255))
-                if display_temp >= 100.0:
-                    frame[300:400, 550:650] = stop
-                else:
-                    frame[300:400, 550:650] = go
-            else:
-                label = "Reading Temp. Please Wait."
-                draw_label(frame, label, (490, 250), (255,255,255))
-                frame[300:400, 550:650] = wait_
-                        
-    x_offset = 75
-    y_offset = 90
-    if face_in_frame:
-        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
+
+        display_temp = 98.6
+        face_in_frame = False
     else:
-        frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
+        try:
+            max_face_index = 0
+            max_face_size = 0
+            mx = 0
+            my = 0
+            mw = 0
+            mh = 0
+            i = 0
+            for (x, y, w, h) in faces:
+                if max_face_size < w*h:
+                    max_face_index = i
+                    max_face_size = w*h
+                    mx = x
+                    my = y
+                    mw = w
+                    mh = h
+                i += 1
+            face_size = mh*mw
+            if mh*mw < 1000:
+                label = "Please step closer."
+                draw_label(img, label, (20, 30), (255, 255, 255))
+                frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
+                face_in_frame == False
+            elif mh*mw >= 6000:
+                label = "Please step back a bit."
+                draw_label(img, label, (20, 30), (255, 255, 255)) 
+                frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
+                face_in_frame == False
+            else:
+                if face_in_frame == False:
+                    face_in_frame = True
+                    body_temp = []
+                temp_scan = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
+                pixels_f = (9/5)*pixels+32
+                grid_z = griddata(points, pixels_f, (grid_x, grid_y), method='cubic')
+                flat_grid = grid_z.flatten()
+                filtered_flat_grid = flat_grid[flat_grid >=75]
+                flat_grid = filtered_flat_grid[filtered_flat_grid <=85]
+                if flat_grid.shape[0] > 10: #no human in heat signature
+                    hist, bin_edges = np.histogram(flat_grid, bins=16)
+                    grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 0
+                    x_scatter_data = []
+                    y_scatter_data = []
+                    for y, row in enumerate(grid_z):
+                        for x, cell in enumerate(row):
+                            if cell != 0:
+                                x_scatter_data.append(x)
+                                y_scatter_data.append(63 - y)
+                    found_groups = False
+                    group_count = 0
+                    data_grid = np.dstack((x_scatter_data, y_scatter_data))[0]
+                    j = 1
+                    while found_groups == False and j < 11:
+                        kmeans = KMeans(n_clusters=j, init='k-means++', max_iter=10, n_init=10, random_state=0)
+                        kmeans.fit(data_grid)
+                        j += 1
+                        if kmeans.inertia_ < 15000 and found_groups == False:
+                            group_count = j
+                            found_groups = True
+                    if group_count > 0:
+                        kmeans = KMeans(n_clusters=group_count, init="k-means++", max_iter=10, n_init=10, random_state=0)
+                        pred_y = kmeans.fit_predict(data_grid)
+                    i = 0
+                    max_size = 0
+                    group_index = 0
+                    temp_reading = 0
+                    group_size = []
+                    group_dims = []
+                    while i < group_count:
+                        series = data_grid[pred_y == i]
+                        total = 0
+                        data_buffer = []
+                        for cell in series:
+                            data_buffer.append(grid_z[63-cell[1]][cell[0]])
+                            total += grid_z[63 - cell[1]][cell[0]]
+                        zone_average = total / len(series)
+                        if max_size < len(data_buffer):
+                            max_size = len(data_buffer)
+                            heat_size = max_size
+                            group_index = i
+                            temp_reading = zone_average
+                        i += 1
+                    if heat_size < 10:
+                        label = "Please step closer."
+                        draw_label(img, label, (20, 30), (255, 255, 255))
+                        frame[300:400, 550:650] = wait_
+                        face_in_frame = False
+                    elif heat_size > 150:
+                        label = "Please step back a bit."
+                        draw_label(img, label, (20, 30), (255, 255, 255))
+                        frame[300:400, 550:650] = wait_
+                        face_in_frame = False
+                    else:
+                        if room_temp > 76:
+                            correction_factor = 14
+                        elif room_temp > 75:
+                            correction_factor = 15
+                        elif room_temp > 74:
+                            correction_factor = 16
+                        elif room_temp > 73:
+                            correction_factor = 17
+                        elif room_temp > 72:
+                            correction_factor = 17
+                        elif room_temp > 70:
+                            correction_factor = 18
+                        elif room_temp > 65:
+                            correction_factor = 18
+                        else:
+                            correction_factor = 19
+                        if len(body_temp) >= 10:
+                            body_temp = body_temp[1:]
+                        body_temp.append(temp_reading + correction_factor)
+                        display_temp = np.average(body_temp)
+                        label = "Observed Temp: {0:.2f} F".format(display_temp)
+                        draw_label(frame, label, (490, 250), (255,255,255))
+                        if display_temp >= 100.0:
+                            frame[300:400, 550:650] = stop
+                            status = "high"
+                        else:
+                            frame[300:400, 550:650] = go
+                            status = "normal"  
+                    frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
+                else:
+                    frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
+        except:
+            print("Error while processing data")
+                
     #out.write(frame)
     cv2.imshow('therm', frame)
     #out.write(frame)
