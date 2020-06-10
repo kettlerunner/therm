@@ -247,8 +247,8 @@ while(True):
                     frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 else:
                     frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
-            except:
-                print("Error while processing data")
+        except:
+            print("Error while processing data")
                 
     #out.write(frame)
     cv2.imshow('therm', frame)
