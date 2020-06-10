@@ -160,6 +160,7 @@ while(True):
             flat_grid = grid_z.flatten()
             filtered_flat_grid = flat_grid[flat_grid >=75]
             flat_grid = filtered_flat_grid[filtered_flat_grid <=85]
+            print(flat_grid.shape)
             hist, bin_edges = np.histogram(flat_grid, bins=16)
             grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 0
             x_scatter_data = []
