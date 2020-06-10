@@ -100,6 +100,7 @@ while(True):
     draw_label(frame, label, (490, 230), (255,255,255))
     if type(faces) is tuple:
         frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
+        cv2.imshow('therm', frame)
         if room_temp == 0:
             ambient_temp = []
         if len(ambient_temp) == 100:
@@ -112,15 +113,7 @@ while(True):
             ambient_temp.append( np.average(room_f))
         room_temp = np.average(ambient_temp)
         if face_in_frame:
-            now = datetime.now()
-            current_time = now.strftime("%m/%d/%Y %I:%M:%S %p")
-            output_data = { "Reading" : [display_temp], "Room_Temp" : [room_temp], "Face_Size" : [face_size], "Heat_Size" : [heat_size], "TOD" : [current_time]  }
-            df = pd.DataFrame(output_data)
-            if os.path.exists("data.csv"):
-                df.to_csv('data.csv', mode='a', header=False)
-            else:
-                df.to_csv('data.csv', header=True)
-            if display_temp >= 80:
+            if display_temp >= 100:
                 client = Client(account_sid, auth_token)
                 client.messages.create(
                     body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
