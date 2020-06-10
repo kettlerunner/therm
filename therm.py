@@ -160,93 +160,95 @@ while(True):
             flat_grid = grid_z.flatten()
             filtered_flat_grid = flat_grid[flat_grid >=75]
             flat_grid = filtered_flat_grid[filtered_flat_grid <=85]
-            print(flat_grid.shape[0])
-            hist, bin_edges = np.histogram(flat_grid, bins=16)
-            grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 0
-            x_scatter_data = []
-            y_scatter_data = []
-            for y, row in enumerate(grid_z):
-                for x, cell in enumerate(row):
-                    if cell != 0:
-                        x_scatter_data.append(x)
-                        y_scatter_data.append(63 - y)
-            found_groups = False
-            group_count = 0
-            data_grid = np.dstack((x_scatter_data, y_scatter_data))[0]
-            j = 1
-            while found_groups == False and j < 11:
-                kmeans = KMeans(n_clusters=j, init='k-means++', max_iter=10, n_init=10, random_state=0)
-                kmeans.fit(data_grid)
-                j += 1
-                if kmeans.inertia_ < 15000 and found_groups == False:
-                    group_count = j
-                    found_groups = True
-            if group_count > 0:
-                try:
-                    kmeans = KMeans(n_clusters=group_count, init="k-means++", max_iter=10, n_init=10, random_state=0)
-                    pred_y = kmeans.fit_predict(data_grid)
-                except:
-                    print("Lost track of object.")
-            i = 0
-            max_size = 0
-            group_index = 0
-            temp_reading = 0
-            group_size = []
-            group_dims = []
-            while i < group_count:
-                series = data_grid[pred_y == i]
-                total = 0
-                data_buffer = []
-                for cell in series:
-                    data_buffer.append(grid_z[63-cell[1]][cell[0]])
-                    total += grid_z[63 - cell[1]][cell[0]]
-                zone_average = total / len(series)
-                if max_size < len(data_buffer):
-                    max_size = len(data_buffer)
-                    heat_size = max_size
-                    group_index = i
-                    temp_reading = zone_average
-                i += 1
-            if heat_size < 10:
-                label = "Please step closer."
-                draw_label(img, label, (20, 30), (255, 255, 255))
-                frame[300:400, 550:650] = wait_
-                face_in_frame = False
-            elif heat_size > 150:
-                label = "Please step back a bit."
-                draw_label(img, label, (20, 30), (255, 255, 255))
-                frame[300:400, 550:650] = wait_
-                face_in_frame = False
+            if flat_grid.shape[0] > 10: #no human in heat signature
+                hist, bin_edges = np.histogram(flat_grid, bins=16)
+                grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 0
+                x_scatter_data = []
+                y_scatter_data = []
+                for y, row in enumerate(grid_z):
+                    for x, cell in enumerate(row):
+                        if cell != 0:
+                            x_scatter_data.append(x)
+                            y_scatter_data.append(63 - y)
+                found_groups = False
+                group_count = 0
+                data_grid = np.dstack((x_scatter_data, y_scatter_data))[0]
+                j = 1
+                while found_groups == False and j < 11:
+                    kmeans = KMeans(n_clusters=j, init='k-means++', max_iter=10, n_init=10, random_state=0)
+                    kmeans.fit(data_grid)
+                    j += 1
+                    if kmeans.inertia_ < 15000 and found_groups == False:
+                        group_count = j
+                        found_groups = True
+                if group_count > 0:
+                    try:
+                        kmeans = KMeans(n_clusters=group_count, init="k-means++", max_iter=10, n_init=10, random_state=0)
+                        pred_y = kmeans.fit_predict(data_grid)
+                    except:
+                        print("Lost track of object.")
+                i = 0
+                max_size = 0
+                group_index = 0
+                temp_reading = 0
+                group_size = []
+                group_dims = []
+                while i < group_count:
+                    series = data_grid[pred_y == i]
+                    total = 0
+                    data_buffer = []
+                    for cell in series:
+                        data_buffer.append(grid_z[63-cell[1]][cell[0]])
+                        total += grid_z[63 - cell[1]][cell[0]]
+                    zone_average = total / len(series)
+                    if max_size < len(data_buffer):
+                        max_size = len(data_buffer)
+                        heat_size = max_size
+                        group_index = i
+                        temp_reading = zone_average
+                    i += 1
+                if heat_size < 10:
+                    label = "Please step closer."
+                    draw_label(img, label, (20, 30), (255, 255, 255))
+                    frame[300:400, 550:650] = wait_
+                    face_in_frame = False
+                elif heat_size > 150:
+                    label = "Please step back a bit."
+                    draw_label(img, label, (20, 30), (255, 255, 255))
+                    frame[300:400, 550:650] = wait_
+                    face_in_frame = False
+                else:
+                    if room_temp > 76:
+                        correction_factor = 14
+                    elif room_temp > 75:
+                        correction_factor = 14
+                    elif room_temp > 74:
+                        correction_factor = 15
+                    elif room_temp > 73:
+                        correction_factor = 15
+                    elif room_temp > 72:
+                        correction_factor = 16
+                    elif room_temp > 70:
+                        correction_factor = 17
+                    elif room_temp > 65:
+                        correction_factor = 17
+                    else:
+                        correction_factor = 18
+                    if len(body_temp) >= 10:
+                        body_temp = body_temp[1:]
+                    body_temp.append(temp_reading + correction_factor)
+                    display_temp = np.average(body_temp)
+                    label = "Observed Temp: {0:.2f} F".format(display_temp)
+                    draw_label(frame, label, (490, 250), (255,255,255))
+                    if display_temp >= 100.0:
+                        frame[300:400, 550:650] = stop
+                        status = "high"
+                    else:
+                        frame[300:400, 550:650] = go
+                        status = "normal"  
+                frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
             else:
-                if room_temp > 76:
-                    correction_factor = 14
-                elif room_temp > 75:
-                    correction_factor = 14
-                elif room_temp > 74:
-                    correction_factor = 15
-                elif room_temp > 73:
-                    correction_factor = 15
-                elif room_temp > 72:
-                    correction_factor = 16
-                elif room_temp > 70:
-                    correction_factor = 17
-                elif room_temp > 65:
-                    correction_factor = 17
-                else:
-                    correction_factor = 18
-                if len(body_temp) >= 10:
-                    body_temp = body_temp[1:]
-                body_temp.append(temp_reading + correction_factor)
-                display_temp = np.average(body_temp)
-                label = "Observed Temp: {0:.2f} F".format(display_temp)
-                draw_label(frame, label, (490, 250), (255,255,255))
-                if display_temp >= 100.0:
-                    frame[300:400, 550:650] = stop
-                    status = "high"
-                else:
-                    frame[300:400, 550:650] = go
-                    status = "normal"  
-            frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
+                frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
     #out.write(frame)
     cv2.imshow('therm', frame)
     #out.write(frame)
