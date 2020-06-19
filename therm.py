@@ -142,6 +142,7 @@ while(True):
                     mh = h
                 i += 1
             face_size = mh*mw
+            print(face_size)
             if mh*mw < 1000:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
