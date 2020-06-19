@@ -103,7 +103,7 @@ while(True):
         cv2.imshow('therm', frame)
         if room_temp == 0:
             ambient_temp = []
-        if len(ambient_temp) == 100:
+        if len(ambient_temp) .= 10:
             ambient_temp = ambient_temp[1:]
         temp_scan = np.asarray(amg.pixels).flatten()
         temp_scan_f = (9/5)*temp_scan + 32
@@ -141,6 +141,7 @@ while(True):
                     mh = h
                 i += 1
             face_size = mh*mw
+            print(heat_size, face_size)
             if mh*mw < 1000:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
