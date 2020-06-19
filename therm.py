@@ -111,6 +111,8 @@ while(True):
         room_f = room_f[room_f < 85]
         if len(room_f) >= 1 and np.std(room_f) <= 1.50:
             ambient_temp.append( np.average(room_f))
+        if len(ambient_temp) > 10:
+            ambient_temp = ambient_temp[1:]
         room_temp = np.average(ambient_temp)
         if face_in_frame:
             if display_temp >= 100.0:
