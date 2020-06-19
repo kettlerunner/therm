@@ -109,7 +109,7 @@ while(True):
         temp_scan_f = (9/5)*temp_scan + 32
         room_f = temp_scan_f[temp_scan_f > 50.0]
         room_f = room_f[room_f < 85]
-        if len(room_f) >= 1 and np.std(room_f) <= 1.50:
+        if len(room_f) >= 1 and np.std(room_f) <= 2.50:
             ambient_temp.append( np.average(room_f))
         room_temp = np.average(ambient_temp)
         if face_in_frame:
@@ -155,7 +155,7 @@ while(True):
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 face_in_frame == False
-            elif mh*mw >= 6000:
+            elif mh*mw >= 10000:
                 label = "Please step back a bit."
                 draw_label(img, label, (20, 30), (255, 255, 255)) 
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
