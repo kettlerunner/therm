@@ -109,9 +109,9 @@ while(True):
         temp_scan_f = (9/5)*temp_scan + 32
         room_f = temp_scan_f[temp_scan_f > 40.0]
         room_f = room_f[room_f < 90]
-        if len(room_f) >= 1 and np.std(room_f) <= 2.0:
+        if len(room_f) >= 1 and np.std(room_f) <= 1.5:
             ambient_temp.append( np.average(room_f))
-        room_temp = np.average(ambient_temp)
+            room_temp = np.average(ambient_temp)
         if face_in_frame:
             if display_temp >= 100.0:
                 client = Client(account_sid, auth_token)
