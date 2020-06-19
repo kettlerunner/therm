@@ -94,6 +94,7 @@ while(True):
         img = img[ty:ty+150, tx:tx+150]
             
     pixels = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
+    print(pixels)
     label = "Room Temp: {0:.1f} F".format(room_temp)
     draw_label(frame, label, (490,210), (255,255,255))
     label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
@@ -105,10 +106,9 @@ while(True):
             ambient_temp = []
         if len(ambient_temp) >= 10:
             ambient_temp = ambient_temp[1:]
-        temp_scan = np.asarray(amg.pixels).flatten()
-        temp_scan_f = (9/5)*temp_scan + 32
-        room_f = temp_scan_f[temp_scan_f > 40.0]
-        room_f = room_f[room_f < 90]
+        room_f = (9/5)*pixels + 32
+        #room_f = temp_scan_f[temp_scan_f > 40.0]
+        #room_f = room_f[room_f < 90]
         if len(room_f) >= 1 and np.std(room_f) <= 2.5:
             ambient_temp.append( np.average(room_f))
             room_temp = np.average(ambient_temp)
@@ -141,7 +141,6 @@ while(True):
                     mh = h
                 i += 1
             face_size = mh*mw
-            print(heat_size, face_size)
             if mh*mw < 1000:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
@@ -206,7 +205,6 @@ while(True):
                             group_index = i
                             temp_reading = zone_average
                         i += 1
-                    print(heat_size)
                     if heat_size < 10:
                         label = "Please step closer."
                         draw_label(img, label, (20, 30), (255, 255, 255))
