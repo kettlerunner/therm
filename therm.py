@@ -204,7 +204,6 @@ while(True):
                             group_index = i
                             temp_reading = zone_average
                         i += 1
-                    print(heat_size, face_size, temp_reading + 17)
                     if heat_size < 10:
                         label = "Please step closer."
                         draw_label(img, label, (20, 30), (255, 255, 255))
