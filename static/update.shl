@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export ACCOUNT_SID=AC17f94477a1867189c03f91382ab3154e
+export AUTH_TOKEN=2f89455428fb872b9431c3aa1ee3b8e1
 sleep 5
 cd /home/pi/Scripts/therm
 git pull https://github.com/kettlerunner/thermie infinite-gymnastics
