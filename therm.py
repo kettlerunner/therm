@@ -216,21 +216,21 @@ while(True):
                         face_in_frame = False
                     else:
                         if room_temp > 76:
-                            correction_factor = 14
+                            correction_factor = 14.0
                         elif room_temp > 75:
-                            correction_factor = 15
+                            correction_factor = 15.0
                         elif room_temp > 74:
-                            correction_factor = 16
+                            correction_factor = 16.0
                         elif room_temp > 73:
-                            correction_factor = 17
+                            correction_factor = 17.0
                         elif room_temp > 72:
-                            correction_factor = 17
+                            correction_factor = 17.0
                         elif room_temp > 70:
-                            correction_factor = 18
+                            correction_factor = 18.0
                         elif room_temp > 65:
-                            correction_factor = 18
+                            correction_factor = 18.0
                         else:
-                            correction_factor = 19
+                            correction_factor = 19.0
                         if len(body_temp) >= 10:
                             body_temp = body_temp[1:]
                         body_temp.append(temp_reading + correction_factor)
