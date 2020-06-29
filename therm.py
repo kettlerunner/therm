@@ -112,23 +112,23 @@ while(True):
         if len(room_f) >= 1 and np.std(room_f) <= 2.50:
             ambient_temp.append( np.average(room_f))
         room_temp = np.average(ambient_temp)
-        if face_in_frame:
-            if display_temp >= 100:
-                client = Client(account_sid, auth_token)
-                try:
-                    client.messages.create(
-                        body="A message from Thermy: \n\nA scan of {0:.1f} F was detected.".format(display_temp),
-                        from_="+19202602260",
-                        to="+14147457204"
-                    )
-                    client.messages.create(
-                        body="A message from Thermy: \n\nA scan of {0:.1f} F was detected.".format(display_temp),
-                        from_="+19202602260",
-                        to="+14142369050"
-                    )
-                except:
-                     print("Error sending messages. No network connection.")
-
+        #if face_in_frame:
+            #if display_temp >= 100:
+            #    client = Client(account_sid, auth_token)
+            #    try:
+            #        client.messages.create(
+            #            body="A message from Thermy: \n\nA scan of {0:.1f} F was detected.".format(display_temp),
+            #            from_="+19202602260",
+            #            to="+14147457204"
+            #        )
+            #        client.messages.create(
+            #            body="A message from Thermy: \n\nA scan of {0:.1f} F was detected.".format(display_temp),
+            #            from_="+19202602260",
+            #            to="+14142369050"
+            #        )
+            #    except:
+            #         print("Error sending messages. No network connection.")
+            #
         display_temp = 98.6
         face_in_frame = False
     else:
