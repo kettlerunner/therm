@@ -45,6 +45,7 @@ temp_offset = 25.0
 display_temp = 98.6
 ambient_temp = []
 face_size = 0
+face_width = 0
 heat_size = 0
 room_temp = 0
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background_OEC_graphics.png")
@@ -140,6 +141,8 @@ while(True):
                     mh = h
                 i += 1
             face_size = mh*mw
+            face_width = mw
+            print(face_width)
             if mh*mw < 1000:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
@@ -210,6 +213,7 @@ while(True):
                         frame[300:400, 550:650] = wait_
                         face_in_frame = False
                     elif heat_size > 60:
+                        print("Heat size: ", heat_size)
                         label = "Please step back a bit."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
