@@ -68,11 +68,12 @@ while(True):
     img  = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
     img = cv2.flip(img, 1)
     frame = og_frame.copy()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.2, 5)
     face_sizes = []
     for (x, y, w, h) in faces:
         face_sizes.append(w*h)
+        cv2.rectangle(img, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
         
     if len(face_sizes) > 0:
         (x, y, w, h) = faces[np.argmax(face_sizes)]
@@ -142,12 +143,12 @@ while(True):
             face_size = mh*mw
             face_width = mw
             print(face_width)
-            if face_width < 20:
+            if mh*mw < 1000:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 face_in_frame == False
-            elif face_width >= 80:
+            elif mh*mw >= 10000:
                 label = "Please step back a bit."
                 draw_label(img, label, (20, 30), (255, 255, 255)) 
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
@@ -206,13 +207,13 @@ while(True):
                             group_index = i
                             temp_reading = zone_average
                         i += 1
-                    print("Heat size: ", heat_size)
                     if heat_size < 10:
                         label = "Please step closer."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
                         face_in_frame = False
                     elif heat_size > 60:
+                        print("Heat size: ", heat_size)
                         label = "Please step back a bit."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
@@ -240,14 +241,12 @@ while(True):
                         display_temp = np.average(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
-
-                        #cv2.rectangle(img, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
                         if display_temp >= 100.0:
                             frame[300:400, 550:650] = stop
                             status = "high"
                         else:
                             frame[300:400, 550:650] = go
-                            status = "normal"
+                            status = "normal"  
                     frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 else:
                     frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
