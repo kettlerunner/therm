@@ -142,7 +142,6 @@ while(True):
                 i += 1
             face_size = mh*mw
             face_width = mw
-            print(face_width)
             if face_width < 20:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
@@ -207,7 +206,6 @@ while(True):
                             group_index = i
                             temp_reading = zone_average
                         i += 1
-                    print("Heat size: ", heat_size)
                     if heat_size < 10:
                         label = "Please step closer."
                         draw_label(img, label, (20, 30), (255, 255, 255))
