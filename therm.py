@@ -143,12 +143,12 @@ while(True):
             face_size = mh*mw
             face_width = mw
             print(face_width)
-            if mh*mw < 1000:
+            if face_width < 20:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 face_in_frame == False
-            elif mh*mw >= 10000:
+            elif face_width >= 80:
                 label = "Please step back a bit."
                 draw_label(img, label, (20, 30), (255, 255, 255)) 
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
@@ -207,13 +207,13 @@ while(True):
                             group_index = i
                             temp_reading = zone_average
                         i += 1
+                    print("Heat size: ", heat_size)
                     if heat_size < 10:
                         label = "Please step closer."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
                         face_in_frame = False
-                    elif heat_size > 60:
-                        print("Heat size: ", heat_size)
+                    elif heat_size > 80:
                         label = "Please step back a bit."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
