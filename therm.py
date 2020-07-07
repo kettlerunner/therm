@@ -240,17 +240,14 @@ while(True):
                         display_temp = np.average(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
+
+                        #cv2.rectangle(img, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
                         if display_temp >= 100.0:
                             frame[300:400, 550:650] = stop
                             status = "high"
                         else:
                             frame[300:400, 550:650] = go
-                            status = "normal"  
-                    
-                    gray_face = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                    face2 = face_cascade.detectMultiScale(gray_face, 1.2, 5)
-                    for (x, y, w, h) in faces2:
-                        cv2.rectangle(img, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
+                            status = "normal"
                     frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 else:
                     frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
