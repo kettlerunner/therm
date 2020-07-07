@@ -68,6 +68,11 @@ while(True):
     img  = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
     img = cv2.flip(img, 1)
     frame = og_frame.copy()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    face = face_cascade.detectMultiScale(gray, 1.2, 5)
+    face_sizes = []
+    for (x, y, w, h) in faces:
+        face_sizes.append(w*h)
         
     if len(face_sizes) > 0:
         (x, y, w, h) = faces[np.argmax(face_sizes)]
