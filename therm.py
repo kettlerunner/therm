@@ -68,12 +68,6 @@ while(True):
     img  = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
     img = cv2.flip(img, 1)
     frame = og_frame.copy()
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.2, 5)
-    face_sizes = []
-    for (x, y, w, h) in faces:
-        face_sizes.append(w*h)
-        cv2.rectangle(img, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
         
     if len(face_sizes) > 0:
         (x, y, w, h) = faces[np.argmax(face_sizes)]
@@ -247,6 +241,13 @@ while(True):
                         else:
                             frame[300:400, 550:650] = go
                             status = "normal"  
+                    
+                    gray_face = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    face2 = face_cascade.detectMultiScale(gray_face, 1.2, 5)
+                    face_sizes = []
+                    for (x, y, w, h) in faces2:
+                        face_sizes.append(w*h)
+                        cv2.rectangle(frame, (x-5, y-5), (x+w+5, y+h+5), (255, 255, 255), 2)
                     frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 else:
                     frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
