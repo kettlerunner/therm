@@ -233,7 +233,7 @@ while(True):
                             frame[300:400, 550:650] = stop
                             status = "high"
                         else:
-                            cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+310, y_offset+310), (0,128,0), 20)
+                            cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+310, y_offset+310), (0,128,0), 15)
                             frame[300:400, 550:650] = go
                             status = "normal"  
                     frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
