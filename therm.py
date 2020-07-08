@@ -13,6 +13,8 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from scipy.interpolate import griddata
 from twilio.rest import Client
+import matplotlib.pyplot as plt
+import numpy as np
 
 def draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
@@ -58,6 +60,7 @@ points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0,64)]
 grid_x, grid_y = np.mgrid[0:7:64j, 0:7:64j]
 x_offset = 75
 y_offset = 90
+fig, axs = plt.subplots(1, 1, sharey=True, tight_layout=True)
 
 #fourcc = cv2.VideoWriter_fourcc(*'XVID')
 #out = cv2.VideoWriter('therm.avi', fourcc, 10.0, (800,480))
@@ -232,6 +235,8 @@ while(True):
                         display_temp = np.average(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
+                        axs[0].hist(body_temp, bins=n_bins)
+                        plt.show()
                         if display_temp >= 100.0:
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
                             label = "{0:.2f} F".format(display_temp)
