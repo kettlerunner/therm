@@ -145,7 +145,7 @@ while(True):
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 face_in_frame == False
-            elif mw >= 120:
+            elif mw >= 150:
                 label = "Please step back a bit."
                 draw_label(img, label, (20, 30), (255, 255, 255)) 
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
