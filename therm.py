@@ -237,7 +237,7 @@ while(True):
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+310, y_offset+310), (0,153,0), 15)
                             display_temp 
                             label = "{0:.2f} F".format(display_temp)
-                            draw_label(frame, label, (x_offset + 60, y_offset), (0,153,0))
+                            draw_label(frame, label, (x_offset + 90, y_offset+10), (0,153,0))
                             frame[300:400, 550:650] = go
                             status = "normal"  
                 else:
