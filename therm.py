@@ -124,22 +124,13 @@ while(True):
     else:
         try:
             max_face_index = 0
-            max_face_size = 0
-            mx = 0
-            my = 0
             mw = 0
-            mh = 0
             i = 0
             for (x, y, w, h) in faces:
-                if max_face_size < w*h:
-                    max_face_index = i
-                    max_face_size = w*h
-                    mx = x
-                    my = y
+                if mw < w:
                     mw = w
-                    mh = h
+                    max_face_index = i
                 i += 1
-            face_size = mh*mw
             if mw < 20:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
