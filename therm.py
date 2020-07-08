@@ -72,7 +72,6 @@ points = [(math.floor(ix / 8), (ix % 8)) for ix in range(0,64)]
 grid_x, grid_y = np.mgrid[0:7:64j, 0:7:64j]
 x_offset = 75
 y_offset = 90
-fig, axs = plt.subplots(1, 1, sharey=True, tight_layout=True)
 
 #fourcc = cv2.VideoWriter_fourcc(*'XVID')
 #out = cv2.VideoWriter('therm.avi', fourcc, 10.0, (800,480))
