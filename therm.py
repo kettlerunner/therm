@@ -140,12 +140,12 @@ while(True):
                     mh = h
                 i += 1
             face_size = mh*mw
-            if mh*mw < 1000:
+            if mw < 20:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 face_in_frame == False
-            elif mh*mw >= 10000:
+            elif mw >= 120:
                 label = "Please step back a bit."
                 draw_label(img, label, (20, 30), (255, 255, 255)) 
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
@@ -210,7 +210,7 @@ while(True):
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
                         face_in_frame = False
-                    elif heat_size > 60:
+                    elif heat_size > 80:
                         label = "Please step back a bit."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
