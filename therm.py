@@ -233,7 +233,7 @@ while(True):
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
                         if display_temp >= 100.0:
-                            cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+310, y_offset+310), (255,0,0), 15)
+                            cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
                             label = "{0:.2f} F".format(display_temp)
                             draw_label(frame, label, (x_offset + 100, y_offset+10), (255,0,0))
                             frame[300:400, 550:650] = stop
