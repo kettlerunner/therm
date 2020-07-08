@@ -142,6 +142,7 @@ while(True):
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 face_in_frame == False
             else:
+                frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 if face_in_frame == False:
                     face_in_frame = True
                     body_temp = []
@@ -239,7 +240,6 @@ while(True):
                             draw_label(frame, label, (x_offset, y_offset), (0,153,0))
                             frame[300:400, 550:650] = go
                             status = "normal"  
-                    frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 else:
                     frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
         except:
