@@ -142,7 +142,6 @@ while(True):
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 face_in_frame == False
             else:
-                frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 if face_in_frame == False:
                     face_in_frame = True
                     body_temp = []
@@ -202,12 +201,15 @@ while(True):
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
                         face_in_frame = False
+                        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                     elif heat_size > 80:
                         label = "Please step back a bit."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
                         face_in_frame = False
+                        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                     else:
+                        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                         if room_temp > 76:
                             correction_factor = 14
                         elif room_temp > 75:
