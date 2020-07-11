@@ -238,6 +238,7 @@ while(True):
                             body_temp = body_temp[1:]
                         body_temp.append(temp_reading + correction_factor)
                         ax1.clear()
+                        plt.axis('off')
                         if len(body_temp) > 1:
                             plt.axvline(np.mean(body_temp), color='k', linestyle='dashed', linewidth=2)
                             plt.axvline(np.mean(body_temp)+3*np.std(body_temp), color='k', linestyle='dashed', linewidth=1)
