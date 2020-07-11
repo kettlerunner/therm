@@ -15,12 +15,11 @@ from scipy.interpolate import griddata
 from twilio.rest import Client
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 from matplotlib import style
-
+from matplotlib.pyplot import figure
 style.use('fivethirtyeight')
 
-fig = plt.figure()
+fig = plt.figure(figsize=(1, 1))
 ax1 = fig.add_subplot(1,1,1)
 
 def draw_label(img, text, pos, bg_color):
