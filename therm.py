@@ -251,7 +251,8 @@ while(True):
                         hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
                         hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
                         
-                        frame[300:380, 300:460] = hist_img
+                        cv2.imshow("plot",hist_img)
+                        print(hist_img.shape)
                         
                         
                         display_temp = np.average(body_temp)
