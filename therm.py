@@ -22,6 +22,7 @@ style.use('fivethirtyeight')
 
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
+ax1.set_xlim((95, 101))
     
 def draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
