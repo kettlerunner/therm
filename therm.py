@@ -22,7 +22,6 @@ style.use('fivethirtyeight')
 
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
-ax1.set_xlim((95, 101))
     
 def draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
@@ -240,6 +239,7 @@ while(True):
                             body_temp = body_temp[1:]
                         body_temp.append(temp_reading + correction_factor)
                         ax1.clear()
+                        ax1.set_xlim((95, 101))
                         ax1.hist(body_temp)
                         plt.pause(0.05)
                         display_temp = np.average(body_temp)
