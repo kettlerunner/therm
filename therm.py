@@ -234,7 +234,7 @@ while(True):
                             correction_factor = 18
                         else:
                             correction_factor = 19
-                        if len(body_temp) >= 10:
+                        if len(body_temp) >= 30:
                             body_temp = body_temp[1:]
                         body_temp.append(temp_reading + correction_factor)
                         ax1.clear()
