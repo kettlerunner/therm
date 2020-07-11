@@ -250,7 +250,7 @@ while(True):
                         hist_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
                         hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
                         hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
-                        frame[300:400, 200:400] = hist_img
+                        frame[300:400, 400:450] = hist_img[:,:50]
                         print(hist_img.shape)
                         
                         
