@@ -261,7 +261,7 @@ while(True):
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
                             label = "{0:.2f} F".format(display_temp)
                             draw_label(frame, label, (x_offset + 100, y_offset+10), (255,0,0))
-                            frame[300:400, 550:650] = stop
+                            frame[200:300, 550:650] = stop
                             status = "high"
                         else:
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+310, y_offset+310), (0,153,0), 15)
