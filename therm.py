@@ -22,7 +22,7 @@ style.use('fivethirtyeight')
 
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
-    
+
 def draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
     scale = 0.6
@@ -241,7 +241,13 @@ while(True):
                         ax1.clear()
                         ax1.set_xlim((95, 101))
                         ax1.hist(body_temp)
-                        plt.pause(0.05)
+                        fig.canvas.draw()
+                        hist_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+                        hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+                        hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
+                        cv2.imshow("plot",hist_img)
+                        
+                        
                         display_temp = np.average(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
