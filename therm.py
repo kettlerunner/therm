@@ -19,7 +19,7 @@ from matplotlib import style
 from matplotlib.pyplot import figure
 style.use('fivethirtyeight')
 
-fig = plt.figure(figsize=(1, 2))
+fig = plt.figure(figsize=(2, 1))
 ax1 = fig.add_subplot(1,1,1)
 
 def draw_label(img, text, pos, bg_color):
@@ -250,7 +250,8 @@ while(True):
                         hist_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
                         hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
                         hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
-                        cv2.imshow("plot",hist_img)
+                        
+                        frame[300:380, 300:460] = hist_img
                         
                         
                         display_temp = np.average(body_temp)
@@ -268,6 +269,7 @@ while(True):
                             draw_label(frame, label, (x_offset + 110, y_offset+10), (0,153,0))
                             frame[300:400, 550:650] = go
                             status = "normal"  
+                        
                 else:
                     frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
         except:
