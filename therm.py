@@ -238,10 +238,10 @@ while(True):
                             body_temp = body_temp[1:]
                         body_temp.append(temp_reading + correction_factor)
                         ax1.clear()
-                        ax1.axvline(body_temp.mean(), color='k', linestyle='dashed', linewidth=1)
+                        plt.axvline(body_temp.mean(), color='k', linestyle='dashed', linewidth=1)
                         #ax1.axvline(body_temp.mean()+3*body_temp.std(), color='k', linestyle='dashed', linewidth=1)
                         #ax1.axvline(body_temp.mean()-3*body_temp.std(), color='k', linestyle='dashed', linewidth=1)
-                        ax1.axvline(100.0, color='r', linestyle='dashed', linewidth=1)
+                        plt.axvline(100.0, color='r', linestyle='dashed', linewidth=1)
                         ax1.set_xlim((95, 101))
                         ax1.hist(body_temp)
                         fig.canvas.draw()
