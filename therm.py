@@ -240,7 +240,7 @@ while(True):
                         body_temp.append(temp_reading + correction_factor)
                         ax1.clear()
                         ax1.hist(body_temp)
-                        plt.show()
+                        plt.pause(0.05)
                         display_temp = np.average(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
