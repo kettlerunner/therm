@@ -250,7 +250,7 @@ while(True):
                         hist_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
                         hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
                         hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
-                        frame[200:300, 500:700] = hist_img
+                        frame[250:300, 500:700] = hist_img[:50, :]
                         label = "Room Temp: {0:.1f} F".format(room_temp)
                         draw_label(frame, label, (490,210), (255,255,255))
                         label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
