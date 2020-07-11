@@ -19,7 +19,7 @@ from matplotlib import style
 from matplotlib.pyplot import figure
 style.use('fivethirtyeight')
 
-fig = plt.figure(figsize=(1, 1))
+fig = plt.figure(figsize=(1, 2))
 ax1 = fig.add_subplot(1,1,1)
 
 def draw_label(img, text, pos, bg_color):
