@@ -250,7 +250,7 @@ while(True):
                         hist_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
                         hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
                         hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
-                        frame[300:400, 400:600] = hist_img
+                        frame[200:300, 400:600] = hist_img
                         print(hist_img.shape)
                         
                         
@@ -261,7 +261,7 @@ while(True):
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
                             label = "{0:.2f} F".format(display_temp)
                             draw_label(frame, label, (x_offset + 100, y_offset+10), (255,0,0))
-                            frame[200:300, 550:650] = stop
+                            frame[300:400, 550:650] = stop
                             status = "high"
                         else:
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+310, y_offset+310), (0,153,0), 15)
