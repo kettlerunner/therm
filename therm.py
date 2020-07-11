@@ -14,19 +14,14 @@ from sklearn.cluster import KMeans
 from scipy.interpolate import griddata
 from twilio.rest import Client
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib import style
 
-def animate(i):
-    graph_data = open('example.txt','r').read()
-    lines = graph_data.split('\n')
-    xs = []
-    ys = []
-    for line in lines:
-        if len(line) > 1:
-            x, y = line.split(',')
-            xs.append(float(x))
-            ys.append(float(y))
-    ax1.clear()
-    ax1.plot(xs, ys)
+style.use('fivethirtyeight')
+
+fig = plt.figure()
+ax1 = fig.add_subplot(1,1,1)
     
 def draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
@@ -243,6 +238,9 @@ while(True):
                         if len(body_temp) >= 10:
                             body_temp = body_temp[1:]
                         body_temp.append(temp_reading + correction_factor)
+                        ax1.clear()
+                        ax1.hist(body_temp)
+                        plt.show()
                         display_temp = np.average(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
