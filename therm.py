@@ -251,6 +251,7 @@ while(True):
                         hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
                         hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
                         frame[255:285, 500:700] = hist_img[:30, :]
+                        display_temp = np.mean(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
                         if display_temp >= 100.0:
