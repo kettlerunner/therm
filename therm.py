@@ -124,7 +124,7 @@ while(True):
             ambient_temp.append( np.average(room_f))
             room_temp = np.average(ambient_temp)
         if face_in_frame:
-            if display_temp >= 95.0:
+            if display_temp >= 99.0:
                 port = 25  # For starttls
                 smtp_server = "mail.precisionathleticswi.com"
                 sender_email = "thermy@precisionathleticswi.com"
