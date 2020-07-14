@@ -17,10 +17,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import style
 from matplotlib.pyplot import figure
-import smtplib, ssl
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-
 style.use('fivethirtyeight')
 
 fig = plt.figure(figsize=(2, 1))
@@ -123,26 +119,8 @@ while(True):
         if len(room_f) >= 1 and np.std(room_f) <= 2.5:
             ambient_temp.append( np.average(room_f))
             room_temp = np.average(ambient_temp)
-        if face_in_frame:
-            if display_temp >= 95.0:
-                port = 25  # For starttls
-                smtp_server = "mail.precisionathleticswi.com"
-                sender_email = "thermy@precisionathleticswi.com"
-                receiver_email = "dan@precisionathleticswi.com"
-                password = "thermy123"
-
-                message = MIMEMultipart("alternative")
-                message["Subject"] = "Temperature Alert - Oshkosh"
-                message["From"] = sender_email
-                message["To"] = receiver_email
-                message_text = "A scan of {} was detected by Thermy on {} at the Oshkosh location.".format(98.5, datetime.now().strftime("%b %d %Y %I:%M %p"))
-                part1 = MIMEText(message_text, "plain")
-                message.attach(part1)
-                context = ssl.create_default_context()
-                with smtplib.SMTP(smtp_server, port) as server:
-                    server.starttls(context=context)
-                    server.login(sender_email, password)
-                    server.sendmail(sender_email, receiver_email, message.as_string())
+        #if face_in_frame:
+            #if display_temp >= 100.0:
             #    client = Client(account_sid, auth_token)
             #    client.messages.create(
             #        body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
