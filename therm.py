@@ -13,6 +13,18 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from scipy.interpolate import griddata
 from twilio.rest import Client
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import style
+from matplotlib.pyplot import figure
+import smtplib, ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+style.use('fivethirtyeight')
+
+fig = plt.figure(figsize=(2, 1))
+ax1 = fig.add_subplot(1,1,1)
 
 def draw_label(img, text, pos, bg_color):
     font_face = cv2.FONT_HERSHEY_SIMPLEX
@@ -45,7 +57,6 @@ temp_offset = 25.0
 display_temp = 98.6
 ambient_temp = []
 face_size = 0
-face_width = 0
 heat_size = 0
 room_temp = 0
 og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background_OEC_graphics.png")
@@ -94,7 +105,7 @@ while(True):
         ty = int(img.shape[0]/2 - 75)
         img = img[ty:ty+150, tx:tx+150]
             
-    pixels = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
+    pixels = np.fliplr(np.asarray(amg.pixels)).flatten()
     label = "Room Temp: {0:.1f} F".format(room_temp)
     draw_label(frame, label, (490,210), (255,255,255))
     label = "Stdev: {0:.4f}".format(np.std(ambient_temp))
@@ -112,8 +123,26 @@ while(True):
         if len(room_f) >= 1 and np.std(room_f) <= 2.5:
             ambient_temp.append( np.average(room_f))
             room_temp = np.average(ambient_temp)
-        #if face_in_frame:
-            #if display_temp >= 100.0:
+        if face_in_frame:
+            if display_temp >= 100.0:
+                port = 25  # For starttls
+                smtp_server = "mail.precisionathleticswi.com"
+                sender_email = "thermy@precisionathleticswi.com"
+                receiver_email = "HR@oecgraphics.com"
+                password = "thermy123"
+
+                message = MIMEMultipart("alternative")
+                message["Subject"] = "Temperature Alert - Oshkosh"
+                message["From"] = sender_email
+                message["To"] = receiver_email
+                message_text = "A scan of {} was detected by Thermy on {} at the Oshkosh location.".format(round(display_temp, 2), datetime.now().strftime("%b %d %Y %I:%M %p"))
+                part1 = MIMEText(message_text, "plain")
+                message.attach(part1)
+                context = ssl.create_default_context()
+                with smtplib.SMTP(smtp_server, port) as server:
+                    server.starttls(context=context)
+                    server.login(sender_email, password)
+                    server.sendmail(sender_email, receiver_email, message.as_string())
             #    client = Client(account_sid, auth_token)
             #    client.messages.create(
             #        body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
@@ -125,29 +154,19 @@ while(True):
     else:
         try:
             max_face_index = 0
-            max_face_size = 0
-            mx = 0
-            my = 0
             mw = 0
-            mh = 0
             i = 0
             for (x, y, w, h) in faces:
-                if max_face_size < w*h:
-                    max_face_index = i
-                    max_face_size = w*h
-                    mx = x
-                    my = y
+                if mw < w:
                     mw = w
-                    mh = h
+                    max_face_index = i
                 i += 1
-            face_size = mh*mw
-            face_width = mw
-            if face_width < 20:
+            if mw < 20:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                 face_in_frame == False
-            elif face_width >= 80:
+            elif mw >= 150:
                 label = "Please step back a bit."
                 draw_label(img, label, (20, 30), (255, 255, 255)) 
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
@@ -206,17 +225,21 @@ while(True):
                             group_index = i
                             temp_reading = zone_average
                         i += 1
+                    print(heat_size, mw, round(heat_size/mw, 2))
                     if heat_size < 10:
                         label = "Please step closer."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
                         face_in_frame = False
+                        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                     elif heat_size > 80:
                         label = "Please step back a bit."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
                         face_in_frame = False
+                        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                     else:
+                        frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                         if room_temp > 76:
                             correction_factor = 14
                         elif room_temp > 75:
@@ -233,19 +256,39 @@ while(True):
                             correction_factor = 18
                         else:
                             correction_factor = 19
-                        if len(body_temp) >= 10:
+                        if len(body_temp) >= 30:
                             body_temp = body_temp[1:]
                         body_temp.append(temp_reading + correction_factor)
-                        display_temp = np.average(body_temp)
+                        ax1.clear()
+                        plt.axis('off')
+                        if len(body_temp) > 1:
+                            plt.axvline(np.mean(body_temp), color='k', linestyle='dashed', linewidth=2)
+                            plt.axvline(np.mean(body_temp)+3*np.std(body_temp), color='k', linestyle='dashed', linewidth=1)
+                            plt.axvline(np.mean(body_temp)-3*np.std(body_temp), color='k', linestyle='dashed', linewidth=1)
+                        plt.axvline(100.0, color='r', linestyle='dashed', linewidth=2)
+                        ax1.set_xlim((95, 101))
+                        ax1.hist(body_temp, alpha=0.2)
+                        fig.canvas.draw()
+                        hist_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+                        hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+                        hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
+                        frame[405:435, 500:700] = hist_img[:30, :]
+                        display_temp = np.mean(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
                         if display_temp >= 100.0:
+                            cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
+                            label = "{0:.2f} F".format(display_temp)
+                            draw_label(frame, label, (x_offset + 100, y_offset+10), (255,0,0))
                             frame[300:400, 550:650] = stop
                             status = "high"
                         else:
+                            cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+310, y_offset+310), (0,153,0), 15)
+                            label = "{0:.2f} F".format(display_temp)
+                            draw_label(frame, label, (x_offset + 110, y_offset+10), (0,153,0))
                             frame[300:400, 550:650] = go
                             status = "normal"  
-                    frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
+                        
                 else:
                     frame[y_offset:y_offset+300, x_offset:x_offset+300] = blank_screen
         except:
