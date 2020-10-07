@@ -40,9 +40,6 @@ def draw_label(img, text, pos, bg_color):
     cv2.rectangle(img, (start_x, start_y), (end_x, end_y), bg_color, thickness)
     cv2.putText(img, text, pos, font_face, scale, color, 1, cv2.LINE_AA)
 
-account_sid = os.environ['ACCOUNT_SID']
-auth_token = os.environ['AUTH_TOKEN']
-
 #out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (800,480))
 
 status = "reading"
