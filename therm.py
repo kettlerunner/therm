@@ -121,7 +121,7 @@ while(True):
             ambient_temp.append( np.average(room_f))
             room_temp = np.average(ambient_temp)
         if face_in_frame:
-            if display_temp >= 97.0:
+            if display_temp >= 100.0:
                 port = 25  # For starttls
                 smtp_server = "mail.precisionathleticswi.com"
                 sender_email = "thermy@precisionathleticswi.com"
@@ -132,7 +132,7 @@ while(True):
                 message["Subject"] = "Temperature Alert - Olympica"
                 message["From"] = sender_email
                 message["To"] = receiver_email
-                message_text = "A scan of {} was detected by Thermy on {} at the Oshkosh location.".format(round(display_temp, 2), datetime.now().strftime("%b %d %Y %I:%M %p"))
+                message_text = "A scan of {} was detected by Thermy on {}.".format(round(display_temp, 2), datetime.now().strftime("%b %d %Y %I:%M %p"))
                 part1 = MIMEText(message_text, "plain")
                 message.attach(part1)
                 context = ssl.create_default_context()
