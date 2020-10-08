@@ -118,7 +118,7 @@ while(True):
         #room_f = temp_scan_f[temp_scan_f > 40.0]
         room_f = room_f[room_f < 90]
         if len(room_f) >= 1 and np.std(room_f) <= 2.5:
-            ambient_temp.append( np.average(room_f))
+            ambient_temp.append( np.average(room_f) + 10) # linear correction factor for room temp.
             room_temp = np.average(ambient_temp)
         if face_in_frame:
             if display_temp >= 100.0:
