@@ -158,7 +158,7 @@ while(True):
                     mw = w
                     max_face_index = i
                 i += 1
-            if mw < 20:
+            if mw < 10:
                 label = "Please step closer."
                 draw_label(img, label, (20, 30), (255, 255, 255))
                 frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
@@ -178,7 +178,7 @@ while(True):
                 flat_grid = grid_z.flatten()
                 filtered_flat_grid = flat_grid[flat_grid >=75]
                 flat_grid = filtered_flat_grid[filtered_flat_grid <=85]
-                if flat_grid.shape[0] > 10: #no human in heat signature
+                if flat_grid.shape[0] > 2: #no human in heat signature
                     hist, bin_edges = np.histogram(flat_grid, bins=16)
                     grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 0
                     x_scatter_data = []
