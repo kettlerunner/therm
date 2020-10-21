@@ -238,21 +238,21 @@ while(True):
                     else:
                         frame[y_offset:y_offset+img.shape[0], x_offset:x_offset+img.shape[1]] = img
                         if room_temp > 76:
-                            correction_factor = 16
-                        elif room_temp > 75:
                             correction_factor = 17
+                        elif room_temp > 75:
+                            correction_factor = 18
                         elif room_temp > 74:
-                            correction_factor = 18
-                        elif room_temp > 73:
-                            correction_factor = 18
-                        elif room_temp > 72:
                             correction_factor = 19
+                        elif room_temp > 73:
+                            correction_factor = 19
+                        elif room_temp > 72:
+                            correction_factor = 21
                         elif room_temp > 70:
-                            correction_factor = 20
+                            correction_factor = 22
                         elif room_temp > 65:
-                            correction_factor = 20
+                            correction_factor = 22
                         else:
-                            correction_factor = 20
+                            correction_factor = 22
                         if len(body_temp) >= 30:
                             body_temp = body_temp[1:]
                         body_temp.append(temp_reading + correction_factor)
