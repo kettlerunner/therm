@@ -42,6 +42,7 @@ def draw_label(img, text, pos, bg_color):
 
 #out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (800,480))
 
+alpha = 8.1
 status = "reading"
 face_in_frame = False
 cap = cv2.VideoCapture(0)
@@ -114,7 +115,7 @@ while(True):
             ambient_temp = []
         if len(ambient_temp) >= 10:
             ambient_temp = ambient_temp[1:]
-        room_f = (9/5)*pixels + 32
+        room_f = (9/5)*pixels + 32 + alpha
         #room_f = temp_scan_f[temp_scan_f > 40.0]
         room_f = room_f[room_f < 90]
         if len(room_f) >= 1 and np.std(room_f) <= 2.5:
