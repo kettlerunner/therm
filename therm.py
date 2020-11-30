@@ -56,7 +56,7 @@ ambient_temp = []
 face_size = 0
 heat_size = 0
 room_temp = 0
-og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background_olympica.png")
+og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background_canteen.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default2.png")
 wait_ = cv2.imread("/home/pi/Scripts/therm/static/img/clock.png")
 stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
@@ -129,7 +129,7 @@ while(True):
                 password = "thermy123"
 
                 message = MIMEMultipart("alternative")
-                message["Subject"] = "Temperature Alert - Olympica"
+                message["Subject"] = "Temperature Alert - Canteen"
                 message["From"] = sender_email
                 message["To"] = receiver_email
                 message_text = "A scan of {} was detected by Thermy on {}.".format(round(display_temp, 2), datetime.now().strftime("%b %d %Y %I:%M %p"))
