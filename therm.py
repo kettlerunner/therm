@@ -126,8 +126,8 @@ while(True):
                 port = 25  # For starttls
                 smtp_server = "mail.precisionathleticswi.com"
                 sender_email = "thermy@precisionathleticswi.com"
-                receiver_email = "dan@precisionathleticswi.com"
-                #receiver_email = "jamie.spoor@compass-usa.com"
+                #receiver_email = "dan@precisionathleticswi.com"
+                receiver_email = "jamie.spoor@compass-usa.com"
                 password = "thermy123"
 
                 message = MIMEMultipart("alternative")
