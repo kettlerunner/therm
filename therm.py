@@ -174,7 +174,7 @@ while(True):
                     face_in_frame = True
                     body_temp = []
                 temp_scan = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
-                pixels_f = (9/5)*pixels+32
+                pixels_f = (9/5)*pixels+32 + alpha
                 grid_z = griddata(points, pixels_f, (grid_x, grid_y), method='cubic')
                 flat_grid = grid_z.flatten()
                 filtered_flat_grid = flat_grid[flat_grid >=75]
