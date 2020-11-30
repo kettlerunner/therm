@@ -179,7 +179,7 @@ while(True):
                 grid_z = griddata(points, pixels_f, (grid_x, grid_y), method='cubic')
                 flat_grid = grid_z.flatten()
                 filtered_flat_grid = flat_grid[flat_grid >=75]
-                flat_grid = filtered_flat_grid[filtered_flat_grid <=85]
+                flat_grid = filtered_flat_grid[filtered_flat_grid <=92]
                 if flat_grid.shape[0] > 2: #no human in heat signature
                     hist, bin_edges = np.histogram(flat_grid, bins=16)
                     grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 0
