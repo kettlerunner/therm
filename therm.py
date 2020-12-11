@@ -302,6 +302,7 @@ while(True):
                         image  = image.reshape(canvas.get_width_height()[::-1] + (3,))
                         image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
                         image = cv2.resize(image, (216, 144))
+                        print(image.shape)
                         plt.close('all')
                         frame[280:280+144, 570:570+216] = image
     
