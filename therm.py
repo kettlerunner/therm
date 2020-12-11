@@ -7,7 +7,7 @@ import busio
 import board
 import cv2
 import adafruit_amg88xx
-from datetime import datetime
+import datetime
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
