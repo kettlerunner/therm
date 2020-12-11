@@ -134,6 +134,7 @@ while(True):
             df2 = df2.append(df)
             df2 = df2[df2['timestamps'] > pd.Timestamp((datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)) - datetime.timedelta(days=1))]
             df2.to_csv('archive.csv')
+            df_temp_readings = df2
             if display_temp >= 100.0:
                 port = 25  # For starttls
                 smtp_server = "mail.precisionathleticswi.com"
@@ -287,17 +288,30 @@ while(True):
                         display_temp = np.mean(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
+                        
+                        df_temp_readings['upper_limit'] = 100
+                        df_temp_readings['lower_limit'] = 97
+                        df_temp_readings.sort_values(by=['timestamps'], inplace=True, ascending=False)
+                        canvas = FigureCanvas(df_temp_readings.plot.line(x='timestamps', y=['temps', 'upper_limit', 'lower_limit'], alpha=0.75, legend=False, color = ['g', 'r', 'r'] ).get_figure())
+                        canvas.draw()       # draw the canvas, cache the renderer
+
+                        image = np.frombuffer(canvas.tostring_rgb(), dtype='uint8')
+                        image  = image.reshape(canvas.get_width_height()[::-1] + (3,))
+                        image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
+                        image = cv2.resize(image, (216, 144))
+                        plt.close('all')
+    
                         if display_temp >= 100.0:
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
                             label = "{0:.2f} F".format(display_temp)
                             draw_label(frame, label, (x_offset + 100, y_offset+10), (255,0,0))
-                            frame[300:400, 550:650] = stop
+                            frame[300:400, 440:540] = stop
                             status = "high"
                         else:
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+310, y_offset+310), (0,153,0), 15)
                             label = "{0:.2f} F".format(display_temp)
                             draw_label(frame, label, (x_offset + 110, y_offset+10), (0,153,0))
-                            frame[300:400, 550:650] = go
+                            frame[300:400, 440:540] = go
                             status = "normal"  
                         
                 else:
