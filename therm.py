@@ -279,7 +279,7 @@ while(True):
                         ax1.set_xlim((95, 101))
                         ax1.hist(body_temp, alpha=0.2)
                         fig.canvas.draw()
-                        hist_img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+                        hist_img = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
                         hist_img  = hist_img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
                         hist_img = cv2.cvtColor(hist_img,cv2.COLOR_RGB2BGR)
                         frame[405:435, 500:700] = hist_img[:30, :]
