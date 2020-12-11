@@ -127,6 +127,10 @@ while(True):
             df['timestamps'] = [datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)]
             df['temps'] = [display_temp]
             df.to_csv('archive.csv', mode='a', header=False)
+            df2 = pd.read_csv('archive.csv')
+            df2['timestamps'] = df2['timestamps'].astype('datetime64[ns]')
+            df2 = df2[df2['timestamps'] > pd.Timestamp((datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)) - datetime.timedelta(days=1))]
+            df2.to_csv('archive.csv')
             if display_temp >= 100.0:
                 port = 25  # For starttls
                 smtp_server = "mail.precisionathleticswi.com"
