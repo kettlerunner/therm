@@ -290,22 +290,6 @@ while(True):
                         display_temp = np.mean(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
-                        
-                        df_temp_readings = pd.read_csv('archive.csv')
-                        df_temp_readings['upper_limit'] = 100
-                        df_temp_readings['lower_limit'] = 97
-                        df_temp_readings.sort_values(by=['timestamps'], inplace=True, ascending=False)
-                        canvas = FigureCanvas(df_temp_readings.plot.line(x='timestamps', y=['temps', 'upper_limit', 'lower_limit'], alpha=0.75, legend=False, color = ['g', 'r', 'r'] ).get_figure())
-                        canvas.draw()       # draw the canvas, cache the renderer
-                        canvas.show()
-                        
-                        image = np.frombuffer(canvas.tostring_rgb(), dtype='uint8')
-                        image  = image.reshape(canvas.get_width_height()[::-1] + (3,))
-                        image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
-                        image = cv2.resize(image, (216, 144))
-                        print(image.shape)
-                        plt.close('all')
-                        frame[280:280+144, 570:570+216] = image
     
                         if display_temp >= 100.0:
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
