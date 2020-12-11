@@ -128,7 +128,8 @@ while(True):
             df['timestamps'] = [datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)]
             df['temps'] = [display_temp]
             df = df.set_index('index')
-            df2 = pd.read_csv('archive.csv', index_col='index')
+            df2 = pd.read_csv('archive.csv')
+            df2 = df2.set_index('index')
             df2['timestamps'] = df2['timestamps'].astype('datetime64[ns]')
             df2 = df2.append(df, ignore_index = True)
             df2 = df2[df2['timestamps'] > pd.Timestamp((datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)) - datetime.timedelta(days=1))]
