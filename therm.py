@@ -291,6 +291,7 @@ while(True):
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
                         
+                        df_temp_readings = pd.read_csv('archive.csv')
                         df_temp_readings['upper_limit'] = 100
                         df_temp_readings['lower_limit'] = 97
                         df_temp_readings.sort_values(by=['timestamps'], inplace=True, ascending=False)
@@ -302,6 +303,7 @@ while(True):
                         image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
                         image = cv2.resize(image, (216, 144))
                         plt.close('all')
+                        frame[280:280+144, 570:570+216] = image
     
                         if display_temp >= 100.0:
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
