@@ -143,7 +143,7 @@ while(True):
                 message["Subject"] = "Temperature Alert - Canteen"
                 message["From"] = sender_email
                 message["To"] = receiver_email
-                message_text = "A scan of {} was detected by Thermy on {}.".format(round(display_temp, 2), datetime.now().strftime("%b %d %Y %I:%M %p"))
+                message_text = "A scan of {} was detected by Thermy on {}.".format(round(display_temp, 2), datetime.datetime.now().strftime("%b %d %Y %I:%M %p"))
                 part1 = MIMEText(message_text, "plain")
                 message.attach(part1)
                 context = ssl.create_default_context()
