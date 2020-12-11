@@ -42,7 +42,7 @@ def draw_label(img, text, pos, bg_color):
 
 #out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (800,480))
 
-alpha = 0.1
+alpha = -1.5
 beta = 0.1
 status = "reading"
 face_in_frame = False
