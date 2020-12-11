@@ -10,6 +10,8 @@ import adafruit_amg88xx
 import datetime
 import numpy as np
 import pandas as pd
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 from sklearn.cluster import KMeans
 from scipy.interpolate import griddata
 from twilio.rest import Client
