@@ -123,6 +123,10 @@ while(True):
             ambient_temp.append( np.average(room_f) + 8) # linear correction factor for room temp.
             room_temp = np.average(ambient_temp)
         if face_in_frame:
+            df = pd.DataFrame()
+            df['timestamps'] = [datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)]
+            df['temps'] = [display_temp]
+            df.to_csv('archive.csv')
             if display_temp >= 100.0:
                 port = 25  # For starttls
                 smtp_server = "mail.precisionathleticswi.com"
