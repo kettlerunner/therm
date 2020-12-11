@@ -124,9 +124,10 @@ while(True):
             room_temp = np.average(ambient_temp)
         if face_in_frame:
             df = pd.DataFrame()
- 
+            df['index'] = [0]
             df['timestamps'] = [datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)]
             df['temps'] = [display_temp]
+            df = df.set_index('index')
             df2 = pd.read_csv('archive.csv', index_col='index')
             df2['timestamps'] = df2['timestamps'].astype('datetime64[ns]')
             df2.append(df, ignore_index = True)
