@@ -7,9 +7,11 @@ import busio
 import board
 import cv2
 import adafruit_amg88xx
-from datetime import datetime
+import datetime
 import numpy as np
 import pandas as pd
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 from sklearn.cluster import KMeans
 from scipy.interpolate import griddata
 from twilio.rest import Client
@@ -42,6 +44,8 @@ def draw_label(img, text, pos, bg_color):
 
 #out = cv2.VideoWriter('therm.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (800,480))
 
+alpha = -1.5
+beta = 0.1
 status = "reading"
 face_in_frame = False
 cap = cv2.VideoCapture(0)
@@ -56,7 +60,7 @@ ambient_temp = []
 face_size = 0
 heat_size = 0
 room_temp = 0
-og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background_olympica.png")
+og_frame = cv2.imread("/home/pi/Scripts/therm/static/img/therm_background_canteen.png")
 blank_screen = cv2.imread("/home/pi/Scripts/therm/static/img/default2.png")
 wait_ = cv2.imread("/home/pi/Scripts/therm/static/img/clock.png")
 stop = cv2.imread("/home/pi/Scripts/therm/static/img/stop.png")
@@ -114,32 +118,45 @@ while(True):
             ambient_temp = []
         if len(ambient_temp) >= 10:
             ambient_temp = ambient_temp[1:]
-        room_f = (9/5)*pixels + 32
+        room_f = (9/5)*pixels + 32 + alpha + beta
         #room_f = temp_scan_f[temp_scan_f > 40.0]
         room_f = room_f[room_f < 90]
         if len(room_f) >= 1 and np.std(room_f) <= 2.5:
             ambient_temp.append( np.average(room_f) + 8) # linear correction factor for room temp.
             room_temp = np.average(ambient_temp)
         if face_in_frame:
-            if display_temp >= 100.0:
-                port = 25  # For starttls
-                smtp_server = "mail.precisionathleticswi.com"
-                sender_email = "thermy@precisionathleticswi.com"
-                receiver_email = "arthur.minasyan@gmail.com"
-                password = "thermy123"
+            df = pd.DataFrame()
+            df['index'] = [0]
+            df['timestamps'] = [datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)]
+            df['temps'] = [display_temp]
+            df = df.set_index('index')
+            df2 = pd.read_csv('archive.csv')
+            df2 = df2.set_index('index')
+            df2['timestamps'] = df2['timestamps'].astype('datetime64[ns]')
+            df2 = df2.append(df)
+            df2 = df2[df2['timestamps'] > pd.Timestamp((datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)) - datetime.timedelta(days=1))]
+            df2.to_csv('archive.csv')
+            df_temp_readings = df2
+            #if display_temp >= 100.0:
+            #    port = 25  # For starttls
+            #    smtp_server = "mail.precisionathleticswi.com"
+            #    sender_email = "thermy@precisionathleticswi.com"
+            #    receiver_email = "dan@precisionathleticswi.com"
+            #    #receiver_email = "jamie.spoor@compass-usa.com"
+            #    password = "thermy123"
 
-                message = MIMEMultipart("alternative")
-                message["Subject"] = "Temperature Alert - Olympica"
-                message["From"] = sender_email
-                message["To"] = receiver_email
-                message_text = "A scan of {} was detected by Thermy on {}.".format(round(display_temp, 2), datetime.now().strftime("%b %d %Y %I:%M %p"))
-                part1 = MIMEText(message_text, "plain")
-                message.attach(part1)
-                context = ssl.create_default_context()
-                with smtplib.SMTP(smtp_server, port) as server:
-                    server.starttls(context=context)
-                    server.login(sender_email, password)
-                    server.sendmail(sender_email, receiver_email, message.as_string())
+            #    message = MIMEMultipart("alternative")
+            #    message["Subject"] = "Temperature Alert - Canteen"
+            #    message["From"] = sender_email
+            #    message["To"] = receiver_email
+            #    message_text = "A scan of {} was detected by Thermy on {}.".format(round(display_temp, 2), datetime.datetime.now().strftime("%b %d %Y %I:%M %p"))
+            #    part1 = MIMEText(message_text, "plain")
+            #    message.attach(part1)
+            #    context = ssl.create_default_context()
+            #    with smtplib.SMTP(smtp_server, port) as server:
+            #        server.starttls(context=context)
+            #        server.login(sender_email, password)
+            #        server.sendmail(sender_email, receiver_email, message.as_string())
             #    client = Client(account_sid, auth_token)
             #    client.messages.create(
             #        body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
@@ -173,11 +190,11 @@ while(True):
                     face_in_frame = True
                     body_temp = []
                 temp_scan = np.fliplr(np.rot90(np.asarray(amg.pixels), k=3)).flatten()
-                pixels_f = (9/5)*pixels+32
+                pixels_f = (9/5)*pixels+32 + alpha
                 grid_z = griddata(points, pixels_f, (grid_x, grid_y), method='cubic')
                 flat_grid = grid_z.flatten()
                 filtered_flat_grid = flat_grid[flat_grid >=75]
-                flat_grid = filtered_flat_grid[filtered_flat_grid <=85]
+                flat_grid = filtered_flat_grid[filtered_flat_grid <=92]
                 if flat_grid.shape[0] > 2: #no human in heat signature
                     hist, bin_edges = np.histogram(flat_grid, bins=16)
                     grid_z[grid_z < bin_edges[len(bin_edges) - 4]] = 0
@@ -223,7 +240,7 @@ while(True):
                             temp_reading = zone_average
                         i += 1
                     print(heat_size, mw, round(heat_size/mw, 2))
-                    if heat_size < 10:
+                    if heat_size < 2:
                         label = "Please step closer."
                         draw_label(img, label, (20, 30), (255, 255, 255))
                         frame[300:400, 550:650] = wait_
@@ -273,6 +290,7 @@ while(True):
                         display_temp = np.mean(body_temp)
                         label = "Observed Temp: {0:.2f} F".format(display_temp)
                         draw_label(frame, label, (490, 250), (255,255,255))
+    
                         if display_temp >= 100.0:
                             cv2.rectangle(frame, (x_offset-10, y_offset-10), (x_offset+305, y_offset+305), (255,0,0), 15)
                             label = "{0:.2f} F".format(display_temp)
