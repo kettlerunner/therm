@@ -137,26 +137,26 @@ while(True):
             df2 = df2[df2['timestamps'] > pd.Timestamp((datetime.datetime.utcnow() - datetime.timedelta(hours=6, minutes=0)) - datetime.timedelta(days=1))]
             df2.to_csv('archive.csv')
             df_temp_readings = df2
-            if display_temp >= 100.0:
-                port = 25  # For starttls
-                smtp_server = "mail.precisionathleticswi.com"
-                sender_email = "thermy@precisionathleticswi.com"
-                receiver_email = "dan@precisionathleticswi.com"
-                #receiver_email = "jamie.spoor@compass-usa.com"
-                password = "thermy123"
+            #if display_temp >= 100.0:
+            #    port = 25  # For starttls
+            #    smtp_server = "mail.precisionathleticswi.com"
+            #    sender_email = "thermy@precisionathleticswi.com"
+            #    receiver_email = "dan@precisionathleticswi.com"
+            #    #receiver_email = "jamie.spoor@compass-usa.com"
+            #    password = "thermy123"
 
-                message = MIMEMultipart("alternative")
-                message["Subject"] = "Temperature Alert - Canteen"
-                message["From"] = sender_email
-                message["To"] = receiver_email
-                message_text = "A scan of {} was detected by Thermy on {}.".format(round(display_temp, 2), datetime.datetime.now().strftime("%b %d %Y %I:%M %p"))
-                part1 = MIMEText(message_text, "plain")
-                message.attach(part1)
-                context = ssl.create_default_context()
-                with smtplib.SMTP(smtp_server, port) as server:
-                    server.starttls(context=context)
-                    server.login(sender_email, password)
-                    server.sendmail(sender_email, receiver_email, message.as_string())
+            #    message = MIMEMultipart("alternative")
+            #    message["Subject"] = "Temperature Alert - Canteen"
+            #    message["From"] = sender_email
+            #    message["To"] = receiver_email
+            #    message_text = "A scan of {} was detected by Thermy on {}.".format(round(display_temp, 2), datetime.datetime.now().strftime("%b %d %Y %I:%M %p"))
+            #    part1 = MIMEText(message_text, "plain")
+            #    message.attach(part1)
+            #    context = ssl.create_default_context()
+            #    with smtplib.SMTP(smtp_server, port) as server:
+            #        server.starttls(context=context)
+            #        server.login(sender_email, password)
+            #        server.sendmail(sender_email, receiver_email, message.as_string())
             #    client = Client(account_sid, auth_token)
             #    client.messages.create(
             #        body="A scan of {0:.1f} F was detected by Thermie.".format(display_temp),
